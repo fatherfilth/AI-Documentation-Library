@@ -35,7 +35,7 @@ jobs:
 
       - name: Detect category and validate doc page exists
         run: |
-          VALID_CATS=("models" "tools" "skills" "repos" "agents")
+          VALID_CATS=("models" "tools" "skills" "repos" "agents" "projects")
           FOUND=false
           for CAT in "${VALID_CATS[@]}"; do
             if [ -f "docs/$CAT/${{ env.SLUG }}.md" ]; then
