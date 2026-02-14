@@ -15,7 +15,7 @@ tags: [claude-code, notifications, terminal-bell, hooks, productivity]
 
 ## Abstract
 
-Claude Code runs long agentic tasks in the terminal and periodically needs human input — permission approvals, clarifying questions, or simple acknowledgment that a task is done. Without notifications, you end up constantly checking the terminal or missing prompts entirely. This document covers the three main notification strategies: the built-in terminal bell (zero config), terminal-native notifications (iTerm2), and Claude Code hooks (full customization). The key finding is that the terminal bell is the fastest to set up but the hooks system is required for reliable, alert-fatigue-free notifications — especially on Windows/WSL where the bell often fails.
+Claude Code runs long agentic tasks in the terminal and periodically needs human input — permission approvals, clarifying questions, or simple acknowledgment that a task is done. Without notifications, you end up constantly checking the terminal or missing prompts entirely. This document covers the three main notification strategies: the built-in terminal bell (zero config), terminal-native notifications (iTerm2), and Claude Code hooks (full customization). The key finding is that the terminal bell is the fastest to set up but the hooks system is required for reliable, alert-fatigue-free notifications — especially on Windows/WSL where the bell often fails. A critical discovery: the widely-documented `claude config set --global` command is broken in Claude Code v2.0+ and must be replaced with direct `settings.json` editing.
 
 ---
 
@@ -38,12 +38,13 @@ This document covers notification configuration for Claude Code's CLI. It does N
 | `idle_prompt` | Notification event that fires when Claude Code displays a new prompt (including after every normal response) |
 | `permission_prompt` | Notification event that fires only when Claude needs explicit approval to proceed |
 | Matcher | A string filter in hook config that determines which notification types trigger a specific hook |
+| `settings.json` | Claude Code's configuration file at `~/.claude/settings.json` (user-level) or `.claude/settings.json` (project-level) |
 
 ---
 
 ## 2. Background & Prior Work
 
-Claude Code has supported terminal bell notifications since early 2025 via a global config flag. The hooks system was introduced alongside lifecycle events (PreToolUse, PostToolUse, Notification, Stop, etc.) giving users arbitrary shell command execution at key points. Community tools like CCNotify [1] and the claude-code-notifications repo [2] emerged to fill the gap with richer macOS desktop notifications including project context and workspace detection. The official docs at code.claude.com cover both terminal configuration [3] and hooks [4].
+Claude Code has supported terminal bell notifications since early 2025 via a global config flag. The hooks system was introduced alongside lifecycle events (PreToolUse, PostToolUse, Notification, Stop, etc.) giving users arbitrary shell command execution at key points. Community tools like CCNotify [1] and the claude-code-notifications repo [2] emerged to fill the gap with richer macOS desktop notifications including project context and workspace detection. The official docs at code.claude.com cover both terminal configuration [3] and hooks [4]. However, the `claude config` CLI command was deprecated in v2.0, breaking the most commonly documented setup path [9].
 
 ---
 
@@ -64,7 +65,7 @@ Prerequisites:
 
 **Approach A: Terminal Bell (simplest)**
 
-1. Run `claude config set --global preferredNotifChannel terminal_bell`
+1. Open `~/.claude/settings.json` and add `"preferredNotifChannel": "terminal_bell"` (see Finding 4.5 — do NOT use the deprecated `claude config set --global` command)
 2. Verify with `echo -e "\a"` — listen for beep or watch for flash
 3. Configure terminal emulator to surface bell events as notifications (varies by terminal — see Findings)
 4. Test end-to-end by starting a Claude Code session, giving it a task, and switching windows
@@ -84,7 +85,7 @@ Prerequisites:
 
 ### 4.1 Terminal Bell Is One Command But Requires Terminal-Side Config
 
-The Claude Code side is a single command: `claude config set --global preferredNotifChannel terminal_bell`. It takes effect immediately with no restart. However, most terminals have the bell muted or set to visual-only by default. The real work is configuring each terminal emulator:
+The Claude Code side requires adding `"preferredNotifChannel": "terminal_bell"` to your settings.json. It takes effect immediately with no restart. However, most terminals have the bell muted or set to visual-only by default. The real work is configuring each terminal emulator:
 
 - **iTerm2**: Settings → Profiles → Terminal → uncheck "Silence bell" → enable "Send escape sequence-generated alerts". This is the gold standard — it sends actual macOS notification banners.
 - **macOS Terminal.app**: Settings → Profiles → Advanced → "Audible bell". Only produces a beep — no notification banner. Not suitable if you switch away from the terminal.
@@ -120,6 +121,34 @@ Config goes in `~/.claude/settings.json` (global) or `.claude/settings.json` (pr
 
 The standard terminal bell does not work reliably in Windows WSL environments. If you're on WSL, skip the bell entirely and go straight to hooks with a PowerShell notification command, or add instructions to your CLAUDE.md telling Claude to execute `powershell.exe -c "[System.Media.SystemSounds]::Question.Play()"` when tasks complete.
 
+### 4.5 `claude config set --global` Is Broken in v2.0+
+
+The most widely documented command for enabling terminal bell — `claude config set --global preferredNotifChannel terminal_bell` — throws `error: unknown option '--global'` in Claude Code v2.0 and later [9]. The `claude config` subcommand was deprecated. This affects all platforms.
+
+**Correct approach for v2.0+:**
+
+Edit `~/.claude/settings.json` directly (on Windows: `C:\Users\<username>\.claude\settings.json`):
+
+```json
+{
+  "preferredNotifChannel": "terminal_bell"
+}
+```
+
+From PowerShell:
+```powershell
+notepad "$env:USERPROFILE\.claude\settings.json"
+```
+
+From macOS/Linux:
+```bash
+nano ~/.claude/settings.json
+```
+
+Alternatively, use the `/config` slash command inside a running Claude Code session, which opens an interactive settings menu and works correctly.
+
+This is particularly important because the vast majority of blog posts, tutorials, and even Anthropic community posts still reference the deprecated `--global` flag syntax. Anyone following those guides on a current version of Claude Code will hit this error immediately.
+
 ---
 
 ## 5. Confusion Points
@@ -130,6 +159,7 @@ The standard terminal bell does not work reliably in Windows WSL environments. I
 | 2 | `idle_prompt` means "Claude is idle and waiting for me" | It fires after every response, not just when Claude is genuinely blocked | High |
 | 3 | macOS Terminal.app supports notification banners from bell events | Terminal.app only supports audible beep and visual flash — no OS notification banners. iTerm2 is needed for that. | Medium |
 | 4 | One notification hook config works across all platforms | Each OS needs a different notification command (osascript, notify-send, PowerShell) | Medium |
+| 5 | `claude config set --global` is the correct way to set preferences | The `--global` flag is broken in v2.0+. Must edit `~/.claude/settings.json` directly or use `/config` inside a session | High |
 
 ---
 
@@ -137,11 +167,12 @@ The standard terminal bell does not work reliably in Windows WSL environments. I
 
 | # | Trigger | Symptom | Fix | Severity |
 |---|---------|---------|-----|----------|
-| 1 | Using WSL with terminal bell | No notification fires — bell character is swallowed | Use hooks with PowerShell command instead of terminal bell | High |
-| 2 | Setting matcher to `*` or `idle_prompt` | Notification after every single response, alert fatigue | Use `permission_prompt` matcher for Notification hook, add separate Stop hook | High |
-| 3 | Running multiple Claude sessions with generic notifications | Can't tell which session needs attention | Use terminal-notifier or custom hook script that includes project/workspace context | Medium |
-| 4 | iTerm2 "Silence bell" is checked (default) | Bell fires but produces no sound or notification | Uncheck "Silence bell" in Profiles → Terminal | Medium |
-| 5 | claude-code v1.0.95+ with invalid settings.json | Hooks disabled entirely with no obvious error | Validate settings.json — any invalid field disables all hooks | Critical |
+| 1 | Using `claude config set --global` on v2.0+ | `error: unknown option '--global'` | Edit `~/.claude/settings.json` directly or use `/config` slash command | Critical |
+| 2 | Using WSL with terminal bell | No notification fires — bell character is swallowed | Use hooks with PowerShell command instead of terminal bell | High |
+| 3 | Setting matcher to `*` or `idle_prompt` | Notification after every single response, alert fatigue | Use `permission_prompt` matcher for Notification hook, add separate Stop hook | High |
+| 4 | Running multiple Claude sessions with generic notifications | Can't tell which session needs attention | Use terminal-notifier or custom hook script that includes project/workspace context | Medium |
+| 5 | iTerm2 "Silence bell" is checked (default) | Bell fires but produces no sound or notification | Uncheck "Silence bell" in Profiles → Terminal | Medium |
+| 6 | claude-code v1.0.95+ with invalid settings.json | Hooks disabled entirely with no obvious error | Validate settings.json — any invalid field disables all hooks | Critical |
 
 ---
 
@@ -149,17 +180,17 @@ The standard terminal bell does not work reliably in Windows WSL environments. I
 
 ### 7.1 Strengths
 
-The terminal bell approach is genuinely one command and zero dependencies. For iTerm2 users on macOS, it produces real OS notification banners with no additional tooling. The hooks system is extremely flexible — any shell command, per-event filtering, project-scoped or global. The `/hooks` interactive menu makes setup approachable for first-timers.
+The terminal bell approach is genuinely zero-dependency once you edit settings.json. For iTerm2 users on macOS, it produces real OS notification banners with no additional tooling. The hooks system is extremely flexible — any shell command, per-event filtering, project-scoped or global. The `/hooks` interactive menu makes setup approachable for first-timers.
 
 ### 7.2 Limitations
 
-The terminal bell is platform-dependent and fails silently on WSL. The `idle_prompt` naming is misleading and causes alert fatigue when used naively. There's no built-in "Claude is genuinely blocked" notification type — you have to approximate it by combining `permission_prompt` and `Stop` hooks. Multi-session awareness requires custom scripting.
+The terminal bell is platform-dependent and fails silently on WSL. The `idle_prompt` naming is misleading and causes alert fatigue when used naively. There's no built-in "Claude is genuinely blocked" notification type — you have to approximate it by combining `permission_prompt` and `Stop` hooks. Multi-session awareness requires custom scripting. The deprecation of `claude config set --global` means most existing documentation is wrong, creating a poor first-run experience.
 
 ### 7.3 Comparison to Alternatives
 
 | Alternative | Key difference | When to prefer it |
 |-------------|----------------|--------------------|
-| Terminal bell | Zero config, one command | Quick setup, iTerm2 on macOS, single session |
+| Terminal bell | Zero config, edit settings.json | Quick setup, iTerm2 on macOS, single session |
 | Hooks with osascript/notify-send | Full control, per-event filtering | Need different alerts for different events |
 | terminal-notifier | Clickable banners, custom icons, project context | Multiple sessions, need to identify which project |
 | CCNotify | Turnkey macOS solution with DB logging | Want notifications + audit trail without custom scripting |
@@ -192,6 +223,7 @@ The terminal bell is platform-dependent and fails silently on WSL. The `idle_pro
 - Whether Anthropic will introduce a dedicated `waiting_for_user_action` notification type (requested in GitHub issue #12048 [5] but closed as duplicate)
 - Exact behavior of `elicitation_dialog` matcher — limited documentation available
 - Whether Ghostty's native bell-to-notification support covers all notification types or just the basic bell character
+- Whether the `/config` slash command will remain the supported replacement for `claude config set` long-term
 
 ---
 
@@ -205,6 +237,7 @@ The terminal bell is platform-dependent and fails silently on WSL. The `idle_pro
 6. [Claude Code terminal notification hooks — martin.hjartmyr.se](https://martin.hjartmyr.se/articles/claude-code-terminal-notifications/)
 7. [Boris Buliga — Claude Code Notifications That Don't Suck](https://www.d12frosted.io/posts/2026-01-05-claude-code-notifications)
 8. [Desktop Notifications for Claude Code over SSH — kane.mx](https://kane.mx/posts/2025/claude-code-notification-hooks/)
+9. [GitHub Issue #8441 — `claude config set --global` is broken](https://github.com/anthropics/claude-code/issues/8441)
 
 ---
 
@@ -216,6 +249,7 @@ The terminal bell is platform-dependent and fails silently on WSL. The `idle_pro
 
 ```json
 {
+  "preferredNotifChannel": "terminal_bell",
   "hooks": {
     "Notification": [
       {
@@ -242,6 +276,7 @@ The terminal bell is platform-dependent and fails silently on WSL. The `idle_pro
 
 ```json
 {
+  "preferredNotifChannel": "terminal_bell",
   "hooks": {
     "Notification": [
       {
@@ -268,6 +303,7 @@ The terminal bell is platform-dependent and fails silently on WSL. The `idle_pro
 
 ```json
 {
+  "preferredNotifChannel": "terminal_bell",
   "hooks": {
     "Notification": [
       {
@@ -293,3 +329,4 @@ N/A — no related documents from this conversation.
 | Date | Change | Author |
 |------|--------|--------|
 | 2026-02-14 | Initial research article | claude |
+| 2026-02-14 | Added Finding 4.5: `claude config set --global` broken in v2.0+, updated methodology and confusion points with manual settings.json workaround, added reference [9] | claude |
