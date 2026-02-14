@@ -6,7 +6,7 @@ participants:
   - user
   - claude
 source: claude.ai
-summary: "Understanding what GSD is, installing it on Windows, evaluating alternatives, and discovering Claude Code tools."
+summary: "Understanding what GSD is, installing it on Windows, evaluating alternatives, discovering Claude Code tools, full command reference, and workflow clarification."
 ---
 
 # Transcript: Get Shit Done (GSD) — Install, Evaluate, and Discover
@@ -103,3 +103,56 @@ After that it asks global vs local install. Global makes it available for all pr
 - **Blog posts and word of mouth** — Developer blogs, Medium articles sharing workflows
 
 No single "app store" yet — discovery is still fragmented across these channels.
+
+## Full Command Reference
+
+**User:** What are the get shit done commands?
+
+**Claude:** Full command list organized by category:
+
+**Core Workflow:**
+- `/gsd:new-project [--auto]` — Full init: questions → research → requirements → roadmap
+- `/gsd:discuss-phase [N]` — Capture implementation decisions before planning
+- `/gsd:plan-phase [N]` — Research + plan + verify for a phase
+- `/gsd:execute-phase <N>` — Execute all plans in parallel waves, verify when complete
+- `/gsd:verify-work [N]` — Manual user acceptance testing
+- `/gsd:audit-milestone` — Verify milestone hit its definition of done
+- `/gsd:complete-milestone` — Archive milestone, tag release
+- `/gsd:new-milestone [name]` — Start next version
+
+**Quick Mode:** `/gsd:quick` — Ad-hoc task with GSD guarantees but no full planning
+
+**Navigation:** `/gsd:progress`, `/gsd:help`, `/gsd:update`, `/gsd:join-discord`
+
+**Brownfield:** `/gsd:map-codebase` — Analyze existing codebase before new-project
+
+**Phase Management:** `/gsd:add-phase`, `/gsd:insert-phase [N]`, `/gsd:remove-phase [N]`, `/gsd:list-phase-assumptions [N]`, `/gsd:plan-milestone-gaps`
+
+**Session:** `/gsd:pause-work`, `/gsd:resume-work`
+
+**Utilities:** `/gsd:settings`, `/gsd:set-profile <profile>`, `/gsd:add-todo [desc]`, `/gsd:check-todos`, `/gsd:debug [desc]`
+
+## new-project vs Phase Commands
+
+**User:** Does new project initiate all the phases for discuss/plan?
+
+**Claude:** No — `/gsd:new-project` only handles the setup stage:
+
+1. Questions — asks until it understands your idea
+2. Research — spawns parallel agents to investigate the domain (optional)
+3. Requirements — extracts v1, v2, and out of scope
+4. Roadmap — creates phases mapped to requirements
+
+Creates: `PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md`, `STATE.md`
+
+After that, you drive each phase manually through the loop:
+
+```
+/gsd:discuss-phase 1 → /gsd:plan-phase 1 → /gsd:execute-phase 1 → /gsd:verify-work 1
+/gsd:discuss-phase 2 → /gsd:plan-phase 2 → /gsd:execute-phase 2 → /gsd:verify-work 2
+... and so on
+```
+
+The `discuss` step is optional but recommended. Once all phases are done, run `/gsd:complete-milestone` to archive and tag.
+
+**Summary:** new-project sets up the "what"; you step through the "how" phase by phase.
