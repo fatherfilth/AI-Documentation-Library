@@ -15,6 +15,7 @@
 | Skills | `docs/skills/` | Techniques, workflows, methodologies, transferable practices |
 | Repos | `docs/repos/` | Specific GitHub repositories — structure, usage, contribution patterns |
 | Agents | `docs/agents/` | AI agent architectures, configurations, orchestration, multi-agent systems |
+| Projects | `docs/projects/` | End-to-end build journals documenting the process, decisions, tools, and outcomes of building specific products or projects |
 
 No other category folders exist. If a topic doesn't fit, discuss before creating a new one.
 
@@ -84,9 +85,11 @@ When one conversation covers multiple distinct topics, the agent creates **one P
 
 ---
 
-## Document Format: Research Article
+## Document Format
 
-All doc pages follow a **research article structure** defined in `docs/_templates/topic.md`:
+### Research Articles (default)
+
+All doc pages in `models`, `tools`, `skills`, `repos`, and `agents` follow a **research article structure** defined in `docs/_templates/topic.md`:
 
 | Section | Purpose |
 |---------|---------|
@@ -104,6 +107,25 @@ All doc pages follow a **research article structure** defined in `docs/_template
 | **Appendix** | Raw data, configs, related documents |
 | **Changelog** | Version history |
 
+### Build Journals (projects category)
+
+Docs in `docs/projects/` use a **build journal structure** defined in `docs/_templates/project.md`:
+
+| Section | Purpose |
+|---------|---------|
+| **Overview** | 3–5 sentence standalone summary of the project |
+| **1. Goals & Requirements** | What you set out to build, constraints, success criteria |
+| **2. Stack & Tools** | Technology choices with rationale |
+| **3. Build Phases** | Chronological narrative of the build — decisions, milestones, pivots |
+| **4. Key Decisions** | Decision table: options considered, rationale, outcome |
+| **5. Challenges & Solutions** | What broke and how you fixed it |
+| **6. Results** | What was built, measured against success criteria |
+| **7. Retrospective** | What worked, what you'd change, surprises |
+| **8. Open Questions & Next Steps** | Unresolved items, future work |
+| **References** | Numbered, labeled links — no bare URLs |
+| **Appendix** | Key configs, related documents |
+| **Changelog** | Version history |
+
 ---
 
 ## Required Files Per PR
@@ -116,7 +138,7 @@ ALL three — PR will be rejected if any are missing.
 docs/<category>/<slug>.md
 ```
 
-- Must follow `docs/_templates/topic.md` exactly.
+- Must follow `docs/_templates/topic.md` (or `project.md` for projects) exactly.
 - Every `{REQUIRED}` placeholder must be filled.
 - No empty sections. If a section truly doesn't apply, write `N/A — {reason}`.
 
@@ -276,12 +298,12 @@ No `admin`, no `delete`, no `actions: write`. Token scoped to this single repo.
 | Branch pattern | `topic/<slug>` |
 | Slug format | lowercase, hyphenated, ≤40 chars, no dates, no category prefix |
 | Doc path | `docs/<category>/<slug>.md` |
-| Doc format | Research article (see template) |
+| Doc format | Research article (`topic.md`) or build journal (`project.md` for projects) |
 | Transcript path | `conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md` |
 | Index path | `docs/_index/README.md` |
 | PR title format | `docs(<category>): <slug>` |
-| Valid categories | `models`, `tools`, `skills`, `repos`, `agents` |
-| Template | `docs/_templates/topic.md` |
+| Valid categories | `models`, `tools`, `skills`, `repos`, `agents`, `projects` |
+| Template | `docs/_templates/topic.md` or `docs/_templates/project.md` |
 | Agent instructions | `.claude/PROJECT_INSTRUCTIONS.md` |
 | Direct commits to main | **Forbidden** |
 | Confirmation required | **No — agent publishes autonomously** |
