@@ -1,8 +1,10 @@
 # AI Documentation Library
 
-A living knowledge base for AI models, tools, skills, repos, and agents — built automatically from conversations with Claude.
+A living knowledge base for AI models, tools, skills, repos, and agents — built automatically from conversations with Claude. Includes a daily newsletter with learnings, AI news, and benchmarks.
 
 ## How It Works
+
+### Documentation
 
 1. **Start a chat** in the Claude Project linked to this repo.
 2. **Talk about any AI topic** — the agent auto-detects the category and generates a slug.
@@ -11,33 +13,68 @@ A living knowledge base for AI models, tools, skills, repos, and agents — buil
 
 No manual categorization. No "Publish" command. Just talk and review.
 
+### Daily Newsletter
+
+Every day at 06:00 UTC, a GitHub Actions workflow:
+
+1. Collects merged PRs from the past 24 hours (your learnings).
+2. Reads any links you dropped in `newsletters/inbox/`.
+3. Reads benchmark data from `benchmarks/`.
+4. Opens a GitHub issue for the agent to search for AI news and generate the newsletter.
+5. Archives the result to `newsletters/YYYY/MM/YYYY-MM-DD.md`.
+6. Sends the newsletter via SMTP.
+
+You can also trigger it manually via `workflow_dispatch`.
+
 ## Repository Structure
 
 ```
 .
 ├── .claude/
-│   └── PROJECT_INSTRUCTIONS.md   # Agent brain — paste into Claude Project custom instructions
+│   └── PROJECT_INSTRUCTIONS.md       # Agent brain — paste into Claude Project custom instructions
 │
 ├── .github/
 │   └── workflows/
-│       └── pr-validation.yml     # CI: validates every PR before merge
+│       ├── pr-validation.yml         # CI: validates every topic PR before merge
+│       ├── daily-newsletter.yml      # Cron: collects data, creates issue, sends email via SMTP
+│       └── validate-benchmarks.yml   # CI: validates benchmark JSON files
 │
 ├── docs/
-│   ├── models/                   # AI model capabilities, benchmarks, prompting patterns
-│   ├── tools/                    # Software tools, libraries, CLIs, APIs, integrations
-│   ├── skills/                   # Techniques, workflows, methodologies
-│   ├── repos/                    # GitHub repository docs — structure, usage, patterns
-│   ├── agents/                   # Agent architectures, orchestration, multi-agent systems
+│   ├── models/                       # AI model capabilities, benchmarks, prompting patterns
+│   ├── tools/                        # Software tools, libraries, CLIs, APIs, integrations
+│   ├── skills/                       # Techniques, workflows, methodologies
+│   ├── repos/                        # GitHub repository docs — structure, usage, patterns
+│   ├── agents/                       # Agent architectures, orchestration, multi-agent systems
 │   ├── _index/
-│   │   └── README.md             # Master index — one row per topic, sorted by slug
+│   │   └── README.md                 # Master index — one row per topic, sorted by slug
 │   └── _templates/
-│       └── topic.md              # Strict template every doc page must follow
+│       └── topic.md                  # Strict template every doc page must follow
+│
+├── newsletters/
+│   ├── _templates/
+│   │   ├── daily.md                  # Markdown template for newsletter archive
+│   │   └── email.html                # HTML template for SMTP email delivery
+│   ├── inbox/                        # Drop links + notes here throughout the day
+│   │   └── README.md                 # Instructions for the inbox
+│   ├── config.json                   # Newsletter sources, schedule, delivery config
+│   └── 2026/                         # Archived newsletters by year/month
+│       └── MM/
+│           └── YYYY-MM-DD.md
+│
+├── benchmarks/
+│   ├── models/                       # Public leaderboard snapshots (LMSYS, HumanEval, MMLU)
+│   │   └── YYYY-MM-DD.json
+│   ├── evals/                        # Personal eval results
+│   │   └── YYYY-MM-DD__eval-name.json
+│   ├── tools/                        # Tool performance metrics
+│   │   └── YYYY-MM-DD__tool-name.json
+│   └── README.md                     # Schemas and rules
 │
 ├── conversations/
-│   └── 2026/                     # Transcripts archived by year → date__slug
+│   └── 2026/                         # Transcripts archived by year → date__slug
 │
-├── CONTRIBUTING.md               # Rules of engagement — naming, paths, PR format, CI, sourcing
-└── README.md                     # ← You are here
+├── CONTRIBUTING.md                   # Rules — naming, paths, PR format, CI, sourcing
+└── README.md                         # ← You are here
 ```
 
 ## Categories
@@ -50,9 +87,19 @@ No manual categorization. No "Publish" command. Just talk and review.
 | Repos | `docs/repos/` | Specific GitHub repositories — structure, usage, contribution patterns |
 | Agents | `docs/agents/` | AI agent architectures, configurations, orchestration, multi-agent systems |
 
+## Newsletter Content Streams
+
+| Stream | Source | How it works |
+|--------|--------|--------------|
+| **Your Learnings** | Merged PRs in this repo | Auto-collected by the daily workflow |
+| **AI News** | Web search + manual inbox | Agent searches 5 categories; you drop links in `newsletters/inbox/YYYY-MM-DD.md` |
+| **Leaderboard Watch** | LMSYS, HumanEval, MMLU | Agent searches for changes; snapshots saved to `benchmarks/models/` |
+| **Personal Evals** | `benchmarks/evals/*.json` | You commit eval results; workflow picks them up |
+| **Tool Metrics** | `benchmarks/tools/*.json` | You commit metrics; workflow picks them up |
+
 ## Contributing
 
-Every contribution follows the same workflow — enforced by CI and agent instructions:
+Every documentation contribution follows the same workflow — enforced by CI and agent instructions:
 
 - **Branch:** `topic/<slug>` (no direct commits to `main`)
 - **Doc page:** `docs/<category>/<slug>.md` (must use `topic.md` template, no unfilled placeholders)
@@ -63,21 +110,30 @@ Full rules in [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Setup
 
-To use this as a Claude Project:
+### Claude Project
 
 1. Create a new **Claude Project** at [claude.ai](https://claude.ai).
-2. Open the project settings.
-3. Paste the contents of [`.claude/PROJECT_INSTRUCTIONS.md`](.claude/PROJECT_INSTRUCTIONS.md) into the **Custom Instructions** box.
-4. Connect your GitHub integration (so the agent can create branches, push, and open PRs).
-5. Start chatting.
+2. Paste the contents of [`.claude/PROJECT_INSTRUCTIONS.md`](.claude/PROJECT_INSTRUCTIONS.md) into **Custom Instructions**.
+3. Connect your GitHub integration.
+4. Start chatting.
 
-## CI Validation
+### Newsletter (SMTP)
 
-Every PR is validated by GitHub Actions before it can be merged:
+Add these secrets to the repository (`Settings → Secrets and variables → Actions`):
 
-- ✅ Branch name matches `topic/<slug>`
-- ✅ Doc page exists in a valid category folder
-- ✅ No `{REQUIRED}` placeholders remain
-- ✅ Transcript exists with valid YAML frontmatter
-- ✅ Index row present
-- ✅ No secrets or credentials in any file
+| Secret | Description |
+|--------|-------------|
+| `SMTP_SERVER` | SMTP server hostname (e.g. `smtp.gmail.com`) |
+| `SMTP_PORT` | SMTP port (e.g. `587`) |
+| `SMTP_USERNAME` | SMTP login username |
+| `SMTP_PASSWORD` | SMTP login password or app password |
+| `NEWSLETTER_TO` | Recipient email address(es) |
+| `NEWSLETTER_FROM` | Sender email address |
+
+## CI Workflows
+
+| Workflow | Trigger | What it does |
+|----------|---------|--------------|
+| `pr-validation.yml` | Every PR to `main` | Validates branch name, doc page, transcript, index, placeholders, secrets |
+| `daily-newsletter.yml` | Daily at 06:00 UTC + manual | Collects data, creates generation issue, sends email via SMTP |
+| `validate-benchmarks.yml` | Push/PR with benchmark changes | Validates JSON format, file naming, required fields |
