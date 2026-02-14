@@ -6,10 +6,10 @@ participants:
   - user
   - claude
 source: claude.ai
-summary: "Understanding what GSD is, installing it on Windows for Claude Code, and first steps after installation."
+summary: "Understanding what GSD is, installing it on Windows, evaluating alternatives, and discovering Claude Code tools."
 ---
 
-# Transcript: Get Shit Done (GSD) — What It Is and How to Install It
+# Transcript: Get Shit Done (GSD) — Install, Evaluate, and Discover
 
 ## What is GSD?
 
@@ -53,8 +53,53 @@ After that it asks global vs local install. Global makes it available for all pr
 2. Run `/gsd:help` to confirm installation
 3. Run `/gsd:new-project` when ready to start building
 
-## Key Decision Point
+## When to Use GSD
 
-**User asked** whether this was already documented in the AI Documentation Library.
+**User:** When is the best time to use get shit done?
 
-**Claude confirmed** the library index was empty — GSD would be the first entry.
+**Claude:** GSD shines when you're building something with multiple features or phases and want Claude Code to do the heavy lifting reliably.
+
+**Best fit:**
+- Full project idea (app, SaaS, tool) — concept to working code
+- Solo dev or small team avoiding enterprise ceremony
+- Project big enough that a single Claude Code session would hit context rot
+- You want clean git history with atomic, bisectable commits
+
+**Skip GSD when:**
+- Quick bug fix or one-off script — use `/gsd:quick` at most
+- Exploring or prototyping without a clear goal
+- Task fits comfortably in a single context window
+
+**Key insight from the README:** GSD is for people who can clearly describe what they want built. If you don't yet know what you want, brainstorm first and bring GSD in once you have a clear vision.
+
+## Alternatives to GSD
+
+**User:** Are there any good alternatives to GSD?
+
+**Claude:** The main alternatives in the spec-driven development space:
+
+- **cc-sdd** — Closest direct competitor. Supports 8 agents (Claude Code, Cursor, Gemini CLI, Codex CLI, GitHub Copilot, Qwen Code, OpenCode, Windsurf). Kiro-style commands for requirements → design → tasks workflow. Best if you need cross-tool support.
+
+- **spec-kit (GitHub)** — More formal approach: constitution → specification → planning → tasks. One user built a full CLI in under 3 days. Trade-off: overkill for small changes.
+
+- **claude-code-spec-workflow (Pimzino)** — Development focus has shifted to an MCP version with real-time dashboard.
+
+- **DIY with native Claude Code features** — Use CLAUDE.md, subagents, and the Task tool without any framework. Viable if you want full control.
+
+- **No framework at all** — One developer argues SDD tools generate diminishing returns as apps grow, and incremental building without specs is faster for simple features. Agile + coding agents vs. waterfall-style documentation.
+
+**Bottom line:** GSD's advantage is simplicity — one install, a few commands, complexity handled behind the scenes. Alternatives tend to be more formal (spec-kit), more cross-tool (cc-sdd), or fully DIY.
+
+## Where to Discover Claude Code Tools
+
+**User:** Where do people find tools like GSD?
+
+**Claude:** Several discovery channels:
+
+- **awesome-claude-code** (GitHub) — Curated list of slash commands, CLAUDE.md files, CLI tools, and workflows. Primary community discovery channel.
+- **Claude Code plugin marketplace** — Official Anthropic marketplace, automatically available in Claude Code. Browse with `/plugin` command.
+- **Aggregator sites** — claudefa.st (50+ MCP servers/extensions), claudemarketplaces.com, awesomeclaude.ai
+- **Community channels** — Claude Developers Discord, Reddit (r/ClaudeAI), X/Twitter
+- **Blog posts and word of mouth** — Developer blogs, Medium articles sharing workflows
+
+No single "app store" yet — discovery is still fragmented across these channels.
