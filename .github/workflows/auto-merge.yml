@@ -1,0 +1,109 @@
+name: Auto-Merge
+
+# Auto-merge topic PRs after all CI checks pass.
+# This eliminates the manual merge step — the agent opens the PR,
+# CI validates it, and this workflow merges it.
+
+on:
+  # Trigger when check suites complete (CI finishes)
+  check_suite:
+    types: [completed]
+  # Also trigger on PR validation completing
+  workflow_run:
+    workflows: ["PR Validation"]
+    types: [completed]
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    # Only run if the triggering workflow succeeded
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.check_suite.conclusion == 'success' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find eligible PRs and merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Looking for open topic/* PRs with passing checks..."
+
+          # Get all open PRs from topic/ branches
+          TOPIC_PRS=$(gh pr list \
+            --repo ${{ github.repository }} \
+            --state open \
+            --json number,headRefName,title,statusCheckRollup \
+            --jq '.[] | select(.headRefName | startswith("topic/"))')
+
+          if [ -z "$TOPIC_PRS" ]; then
+            echo "No open topic/* PRs found."
+            exit 0
+          fi
+
+          # Check each PR
+          gh pr list \
+            --repo ${{ github.repository }} \
+            --state open \
+            --json number,headRefName,title \
+            --jq '.[] | select(.headRefName | startswith("topic/")) | .number' | \
+          while read -r PR_NUM; do
+            echo ""
+            echo "──────────────────────────────────────"
+            echo "Checking PR #$PR_NUM..."
+
+            # Get PR details
+            PR_BRANCH=$(gh pr view $PR_NUM --repo ${{ github.repository }} --json headRefName -q '.headRefName')
+            PR_TITLE=$(gh pr view $PR_NUM --repo ${{ github.repository }} --json title -q '.title')
+            echo "Branch: $PR_BRANCH"
+            echo "Title: $PR_TITLE"
+
+            # Check if all status checks have passed
+            CHECK_STATUS=$(gh pr checks $PR_NUM --repo ${{ github.repository }} 2>&1 || true)
+            echo "Check status:"
+            echo "$CHECK_STATUS"
+
+            # Count failures and pending
+            FAIL_COUNT=$(echo "$CHECK_STATUS" | grep -c 'fail\|X' || true)
+            PENDING_COUNT=$(echo "$CHECK_STATUS" | grep -c 'pending\|*' || true)
+
+            if [ "$FAIL_COUNT" -gt 0 ]; then
+              echo "❌ PR #$PR_NUM has failing checks. Skipping."
+              continue
+            fi
+
+            if [ "$PENDING_COUNT" -gt 0 ]; then
+              echo "⏳ PR #$PR_NUM has pending checks. Skipping."
+              continue
+            fi
+
+            # Check for merge conflicts
+            MERGEABLE=$(gh pr view $PR_NUM --repo ${{ github.repository }} --json mergeable -q '.mergeable')
+            if [ "$MERGEABLE" != "MERGEABLE" ]; then
+              echo "⚠️ PR #$PR_NUM is not mergeable (status: $MERGEABLE). Skipping."
+              continue
+            fi
+
+            # All checks passed + mergeable → merge
+            echo "✅ All checks passed for PR #$PR_NUM. Merging..."
+            gh pr merge $PR_NUM \
+              --repo ${{ github.repository }} \
+              --merge \
+              --subject "docs: merge $PR_BRANCH" \
+              --body "Auto-merged after all CI checks passed." \
+              --delete-branch
+
+            echo "✅ PR #$PR_NUM merged and branch $PR_BRANCH deleted."
+          done
+
+          echo ""
+          echo "✅ Auto-merge check complete."

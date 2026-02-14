@@ -1,93 +1,185 @@
+---
+title: "{TITLE}"
+status: draft | review | stable | deprecated
+category: "{CATEGORY}"
+slug: "{SLUG}"
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+author: "{NAME_OR_AGENT_ID}"
+tags: []
+---
+
 # {TITLE}
 
-> **Status:** `draft | review | stable | deprecated`
-> **Created:** YYYY-MM-DD
-> **Updated:** YYYY-MM-DD
-> **Author:** {NAME_OR_AGENT_ID}
-
 ---
 
-## Purpose / When to Use
+## Abstract
 
-<!-- ONE paragraph. What is this and when should you reach for it? -->
+<!-- 3–5 sentence summary of the entire document. What is this, why does it matter, and what did we find? A reader should be able to skip everything else and still get value from this. -->
 
 {REQUIRED}
 
 ---
 
-## Quickstart
+## 1. Introduction
 
-<!-- Minimum viable steps to get running. Code blocks, commands, or numbered steps only. No prose. -->
+### 1.1 Problem Statement
+
+<!-- What problem or question does this address? Why now? -->
+
+{REQUIRED}
+
+### 1.2 Scope
+
+<!-- What this document covers and what it explicitly does NOT cover. -->
+
+{REQUIRED}
+
+### 1.3 Key Terms
+
+<!-- Define any terms a reader might not know. Keep to 3–6 entries. -->
+
+| Term | Definition |
+|------|------------|
+| {TERM} | {DEFINITION} |
+
+---
+
+## 2. Background & Prior Work
+
+<!-- What existed before this? What other approaches have been tried? Cite specific tools, papers, or docs. This grounds the reader and prevents re-research. -->
+
+{REQUIRED}
+
+---
+
+## 3. Methodology / Approach
+
+<!-- How did we arrive at the findings below? This could be: setup steps, configuration, eval design, architecture decisions, or the specific workflow used. -->
+
+### 3.1 Setup
+
+<!-- Environment, prerequisites, configuration. Code blocks and commands only — no prose. -->
 
 ```
 {REQUIRED}
 ```
 
----
+### 3.2 Process
 
-## Mental Model
-
-<!-- ONE analogy or diagram that makes this click. Keep it to 3–5 sentences max. -->
+<!-- Step-by-step what was done. Numbered if sequential, grouped by phase if parallel. -->
 
 {REQUIRED}
 
 ---
 
-## Confusion Points
+## 4. Findings
 
-<!-- Specific misunderstandings surfaced from conversations. Quote or paraphrase the confusion, then correct it. -->
+<!-- What did we learn? Organized by sub-topic. Each finding should be a specific, falsifiable claim. -->
 
-| # | What I thought | What's actually true |
-|---|----------------|----------------------|
-| 1 | {MISCONCEPTION} | {CORRECTION} |
+### 4.1 {FINDING_TITLE}
 
----
+{REQUIRED}
 
-## Gotchas / Failure Modes
+### 4.2 {FINDING_TITLE}
 
-<!-- Things that will bite you. Be specific: trigger → symptom → fix. -->
-
-| # | Trigger | Symptom | Fix |
-|---|---------|---------|-----|
-| 1 | {TRIGGER} | {SYMPTOM} | {FIX} |
+{REQUIRED}
 
 ---
 
-## Pros / Cons
+## 5. Confusion Points
 
-| Pros | Cons |
-|------|------|
-| {PRO} | {CON} |
+<!-- Specific misunderstandings surfaced during the conversation. These are the most valuable part of the doc — they prevent others from hitting the same walls. -->
 
----
-
-## Alternatives
-
-<!-- Other tools/approaches that solve the same problem. One line each. -->
-
-| Alternative | Key difference |
-|-------------|----------------|
-| {NAME} | {DIFFERENCE} |
+| # | What I assumed | What's actually true | Impact |
+|---|----------------|----------------------|--------|
+| 1 | {MISCONCEPTION} | {CORRECTION} | {HIGH_MEDIUM_LOW} |
 
 ---
 
-## Decision Checklist
+## 6. Failure Modes & Gotchas
 
-<!-- Binary yes/no gates. If all yes → use this thing. -->
+<!-- Things that will break. Be specific: trigger → symptom → fix. -->
+
+| # | Trigger | Symptom | Fix | Severity |
+|---|---------|---------|-----|----------|
+| 1 | {TRIGGER} | {SYMPTOM} | {FIX} | {CRITICAL_HIGH_MEDIUM_LOW} |
+
+---
+
+## 7. Analysis
+
+### 7.1 Strengths
+
+<!-- What works well and why. -->
+
+{REQUIRED}
+
+### 7.2 Limitations
+
+<!-- What doesn't work, what's missing, where it breaks down. -->
+
+{REQUIRED}
+
+### 7.3 Comparison to Alternatives
+
+<!-- How does this compare to other approaches? -->
+
+| Alternative | Key difference | When to prefer it |
+|-------------|----------------|--------------------|
+| {NAME} | {DIFFERENCE} | {WHEN} |
+
+---
+
+## 8. Recommendations
+
+### 8.1 Decision Checklist
+
+<!-- Binary yes/no gates. If all yes → use this. -->
 
 - [ ] {CONDITION_1}
 - [ ] {CONDITION_2}
 - [ ] {CONDITION_3}
 
-> **Rule:** If any box is unchecked, see [Alternatives](#alternatives).
+> If any box is unchecked, see [Comparison to Alternatives](#73-comparison-to-alternatives).
+
+### 8.2 Next Steps
+
+<!-- What should be explored next? Unresolved questions, follow-up experiments, adjacent topics. -->
+
+{REQUIRED}
+
+---
+
+## 9. Open Questions & Unknowns
+
+<!-- Things we don't know yet. Honest gaps. If a reference couldn't be verified, note it here. -->
+
+- {QUESTION_OR_UNKNOWN}
 
 ---
 
 ## References
 
-<!-- No bare URLs. Every link gets a label. -->
+<!-- No bare URLs. Every link gets a label. Numbered for in-text citation. -->
 
-- [{LABEL}]({URL})
+1. [{LABEL}]({URL})
+
+---
+
+## Appendix
+
+### A. Raw Data / Configs
+
+<!-- Any supporting material: full config files, raw output, extended tables. -->
+
+N/A — {REASON_OR_CONTENT}
+
+### B. Related Documents
+
+<!-- Links to other docs in this library that connect to this topic. -->
+
+- [{RELATED_SLUG}](../{CATEGORY}/{RELATED_SLUG}.md)
 
 ---
 
@@ -95,4 +187,4 @@
 
 | Date | Change | Author |
 |------|--------|--------|
-| YYYY-MM-DD | Initial draft | {AUTHOR} |
+| YYYY-MM-DD | Initial research article | {AUTHOR} |
