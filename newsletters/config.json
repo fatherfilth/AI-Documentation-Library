@@ -1,0 +1,83 @@
+{
+  "newsletter": {
+    "name": "AI Documentation Daily",
+    "schedule": "daily",
+    "generation_time_utc": "06:00",
+    "timezone": "UTC",
+    "repo": "fatherfilth/AI-Documentation-Library",
+    "archive_path": "newsletters/YYYY/MM/YYYY-MM-DD.md",
+    "inbox_path": "newsletters/inbox/YYYY-MM-DD.md",
+    "template_path": "newsletters/_templates/daily.md"
+  },
+  "sources": {
+    "learnings": {
+      "type": "github",
+      "method": "merged PRs and commits in past 24h",
+      "repo": "fatherfilth/AI-Documentation-Library",
+      "branch": "main"
+    },
+    "news": {
+      "type": "hybrid",
+      "auto_search": {
+        "enabled": true,
+        "queries": [
+          "AI models new release today",
+          "AI tools launch announcement",
+          "AI agent framework update",
+          "machine learning benchmark results",
+          "LLM research paper published today"
+        ],
+        "max_results_per_query": 3
+      },
+      "manual_inbox": {
+        "enabled": true,
+        "path": "newsletters/inbox/"
+      }
+    },
+    "benchmarks": {
+      "leaderboards": {
+        "enabled": true,
+        "sources": [
+          {
+            "name": "LMSYS Chatbot Arena",
+            "url": "https://chat.lmsys.org/?leaderboard",
+            "check_method": "web_search"
+          },
+          {
+            "name": "HumanEval",
+            "url": "https://paperswithcode.com/sota/code-generation-on-humaneval",
+            "check_method": "web_search"
+          },
+          {
+            "name": "MMLU",
+            "url": "https://paperswithcode.com/sota/multi-task-language-understanding-on-mmlu",
+            "check_method": "web_search"
+          }
+        ]
+      },
+      "personal_evals": {
+        "enabled": true,
+        "path": "benchmarks/evals/"
+      },
+      "tool_metrics": {
+        "enabled": true,
+        "path": "benchmarks/tools/"
+      }
+    }
+  },
+  "delivery": {
+    "archive": {
+      "enabled": true,
+      "path": "newsletters/YYYY/MM/YYYY-MM-DD.md",
+      "branch": "main"
+    },
+    "email": {
+      "enabled": true,
+      "provider": "braze",
+      "template_name": "AI-Daily-Newsletter",
+      "subject_format": "AI Daily — {DATE} — {HEADLINE}",
+      "preheader_format": "{LEARNING_COUNT} learnings · {NEWS_COUNT} news · {BENCHMARK_CHANGES} benchmark changes"
+    }
+  },
+  "categories": ["models", "tools", "skills", "repos", "agents"]
+}
