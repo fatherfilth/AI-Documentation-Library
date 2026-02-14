@@ -26,16 +26,19 @@ claude
 # 3. Verify installation
 /gsd:help
 
-# 4. Start a new project
+# 4. Start a new project — this creates the roadmap, NOT the code
 /gsd:new-project
 
-# 5. Follow the loop for each phase:
-/gsd:discuss-phase 1
+# 5. Then drive each phase manually through the loop:
+/gsd:discuss-phase 1    # optional but recommended
 /gsd:plan-phase 1
 /gsd:execute-phase 1
 /gsd:verify-work 1
 
-# 6. For quick ad-hoc tasks that don't need full planning:
+# 6. Repeat for phase 2, 3, etc. Then:
+/gsd:complete-milestone
+
+# 7. For quick ad-hoc tasks that don't need full planning:
 /gsd:quick
 ```
 
@@ -44,6 +47,73 @@ claude
 ## Mental Model
 
 Think of GSD as a project manager sitting between you and Claude Code. You describe what you want in plain language. GSD breaks that into a roadmap of phases, then each phase into atomic tasks small enough to fit in a fresh context window. Each task is executed by a subagent with a clean 200k-token context, so you never hit the "context rot" problem where Claude's quality degrades as the conversation gets long. The result is consistent, high-quality code with clean git history.
+
+**Important:** `/gsd:new-project` only sets up the roadmap — it does NOT automatically run through all the phases. You step through each phase yourself using the discuss → plan → execute → verify loop. This is by design: you stay in control of what gets built and when.
+
+---
+
+## Command Reference
+
+### Core Workflow
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:new-project [--auto]` | Full init: questions → research → requirements → roadmap. Creates `PROJECT.md`, `REQUIREMENTS.md`, `ROADMAP.md`, `STATE.md` |
+| `/gsd:discuss-phase [N]` | Capture implementation preferences before planning (optional but recommended) |
+| `/gsd:plan-phase [N]` | Research + plan + verify for a phase. Creates `CONTEXT.md`, `RESEARCH.md`, `PLAN.md` files |
+| `/gsd:execute-phase <N>` | Execute all plans in parallel waves, verify when complete |
+| `/gsd:verify-work [N]` | Manual user acceptance testing — walk through deliverables one by one |
+| `/gsd:audit-milestone` | Verify milestone hit its definition of done |
+| `/gsd:complete-milestone` | Archive milestone, tag release |
+| `/gsd:new-milestone [name]` | Start next version with fresh roadmap |
+
+### Quick Mode
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:quick` | Ad-hoc task with GSD guarantees (atomic commits, state tracking) but no full planning |
+
+### Navigation
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:progress` | Where am I? What's next? |
+| `/gsd:help` | Show all commands |
+| `/gsd:update` | Update GSD with changelog preview |
+| `/gsd:join-discord` | Join the community |
+
+### Brownfield (Existing Codebases)
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:map-codebase` | Analyze existing codebase before starting `new-project` |
+
+### Phase Management
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:add-phase` | Append phase to roadmap |
+| `/gsd:insert-phase [N]` | Insert urgent work between phases |
+| `/gsd:remove-phase [N]` | Remove future phase, renumber |
+| `/gsd:list-phase-assumptions [N]` | See Claude's intended approach before planning |
+| `/gsd:plan-milestone-gaps` | Create phases to close gaps from audit |
+
+### Session Management
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:pause-work` | Create handoff when stopping mid-phase |
+| `/gsd:resume-work` | Restore from last session |
+
+### Utilities
+
+| Command | What it does |
+|---------|-------------|
+| `/gsd:settings` | Configure model profile and workflow agents |
+| `/gsd:set-profile <profile>` | Switch model profile: `quality` (Opus/Opus/Sonnet), `balanced` (Opus/Sonnet/Sonnet), `budget` (Sonnet/Sonnet/Haiku) |
+| `/gsd:add-todo [desc]` | Capture idea for later |
+| `/gsd:check-todos` | List pending todos |
+| `/gsd:debug [desc]` | Systematic debugging with persistent state |
 
 ---
 
@@ -57,6 +127,7 @@ Think of GSD as a project manager sitting between you and Claude Code. You descr
 | 4 | GSD requires complex configuration | Install is one command (`npx get-shit-done-cc@latest`), two prompts (runtime + location), and you're done |
 | 5 | GSD is the only option for structured Claude Code development | There's a growing ecosystem of spec-driven development tools — cc-sdd, spec-kit, claude-code-spec-workflow, or even DIY with native Claude Code features |
 | 6 | There's a central app store for Claude Code tools | Discovery is fragmented across GitHub awesome lists, the Claude Code plugin marketplace, aggregator sites, Discord communities, and blog posts |
+| 7 | `/gsd:new-project` runs all the phases automatically | `new-project` only creates the roadmap (PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md). You then drive each phase manually: discuss → plan → execute → verify |
 
 ---
 
@@ -112,9 +183,9 @@ Think of GSD as a project manager sitting between you and Claude Code. You descr
 
 ## Where to Discover Tools Like GSD
 
-- **awesome-claude-code** — Primary community-curated list on GitHub for Claude Code tools, workflows, and extensions
+- **[awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code)** — Primary community-curated list on GitHub for Claude Code tools, workflows, and extensions
 - **Claude Code plugin marketplace** — Official Anthropic marketplace, available via `/plugin` command inside Claude Code
-- **Aggregator sites** — claudefa.st, claudemarketplaces.com, awesomeclaude.ai
+- **Aggregator sites** — [claudefa.st](https://claudefa.st), [claudemarketplaces.com](https://claudemarketplaces.com), [awesomeclaude.ai](https://awesomeclaude.ai)
 - **Community channels** — Claude Developers Discord, Reddit (r/ClaudeAI), X/Twitter
 - **Developer blog posts** — Medium, personal blogs, and dev.to articles sharing workflows
 
@@ -141,3 +212,4 @@ Think of GSD as a project manager sitting between you and Claude Code. You descr
 |------|--------|--------|
 | 2026-02-14 | Initial draft from installation walkthrough session | Claude (documentation agent) |
 | 2026-02-14 | Expanded with alternatives comparison, when-to-use guidance, and tool discovery channels | Claude (documentation agent) |
+| 2026-02-14 | Added full command reference, workflow clarification (new-project vs phases), and confusion point #7 | Claude (documentation agent) |
