@@ -1,0 +1,199 @@
+name: Daily Newsletter
+
+on:
+  schedule:
+    # Runs daily at 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      date_override:
+        description: 'Override date (YYYY-MM-DD). Defaults to today.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  collect-data:
+    runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.meta.outputs.date }}
+      year: ${{ steps.meta.outputs.year }}
+      month: ${{ steps.meta.outputs.month }}
+      has_learnings: ${{ steps.learnings.outputs.has_learnings }}
+      has_inbox: ${{ steps.inbox.outputs.has_inbox }}
+      has_evals: ${{ steps.benchmarks.outputs.has_evals }}
+      has_tool_metrics: ${{ steps.benchmarks.outputs.has_tool_metrics }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set date metadata
+        id: meta
+        run: |
+          if [ -n "${{ inputs.date_override }}" ]; then
+            DATE="${{ inputs.date_override }}"
+          else
+            DATE=$(date -u +%Y-%m-%d)
+          fi
+          YEAR=$(echo $DATE | cut -d'-' -f1)
+          MONTH=$(echo $DATE | cut -d'-' -f2)
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "year=$YEAR" >> "$GITHUB_OUTPUT"
+          echo "month=$MONTH" >> "$GITHUB_OUTPUT"
+          echo "✅ Newsletter date: $DATE"
+
+      - name: Collect merged PRs (past 24h)
+        id: learnings
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-24H +%Y-%m-%dT%H:%M:%SZ)
+          echo "Collecting PRs merged since: $SINCE"
+
+          # Get merged PRs
+          gh pr list \
+            --repo ${{ github.repository }} \
+            --state merged \
+            --search "merged:>=$SINCE" \
+            --json number,title,mergedAt,headRefName,url,body \
+            --limit 50 > /tmp/merged_prs.json
+
+          COUNT=$(jq length /tmp/merged_prs.json)
+          echo "Found $COUNT merged PRs"
+
+          if [ "$COUNT" -gt 0 ]; then
+            echo "has_learnings=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_learnings=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Build learnings table rows
+          jq -r '.[] | 
+            (.headRefName | split("/") | if length > 1 then .[1] else .[0] end) as $slug |
+            "| \($slug) | | \(.title) | | [#\(.number)](\(.url)) |"' \
+            /tmp/merged_prs.json > /tmp/learnings_rows.txt || true
+
+          echo "✅ Learnings collected"
+
+      - name: Check inbox for manual links
+        id: inbox
+        run: |
+          DATE="${{ steps.meta.outputs.date }}"
+          if [ -f "newsletters/inbox/${DATE}.md" ]; then
+            echo "has_inbox=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Inbox file found: newsletters/inbox/${DATE}.md"
+          else
+            echo "has_inbox=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️ No inbox file for $DATE"
+          fi
+
+      - name: Check for benchmark data
+        id: benchmarks
+        run: |
+          DATE="${{ steps.meta.outputs.date }}"
+
+          # Personal evals
+          if ls benchmarks/evals/${DATE}__*.json 1>/dev/null 2>&1; then
+            echo "has_evals=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Eval data found"
+          else
+            echo "has_evals=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Tool metrics
+          if ls benchmarks/tools/${DATE}__*.json 1>/dev/null 2>&1; then
+            echo "has_tool_metrics=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Tool metrics found"
+          else
+            echo "has_tool_metrics=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload collection artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-data
+          path: /tmp/merged_prs.json
+          retention-days: 7
+
+      - name: Create newsletter generation issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          DATE="${{ steps.meta.outputs.date }}"
+          YEAR="${{ steps.meta.outputs.year }}"
+          MONTH="${{ steps.meta.outputs.month }}"
+          HAS_LEARNINGS="${{ steps.learnings.outputs.has_learnings }}"
+          HAS_INBOX="${{ steps.inbox.outputs.has_inbox }}"
+          HAS_EVALS="${{ steps.benchmarks.outputs.has_evals }}"
+          HAS_TOOLS="${{ steps.benchmarks.outputs.has_tool_metrics }}"
+
+          # Count merged PRs
+          PR_COUNT=$(jq length /tmp/merged_prs.json)
+
+          # Build PR summary for issue body
+          if [ "$PR_COUNT" -gt 0 ]; then
+            PR_SUMMARY=$(jq -r '.[] | "- [#\(.number)](\(.url)) \(.title)"' /tmp/merged_prs.json)
+          else
+            PR_SUMMARY="No PRs merged in the past 24 hours."
+          fi
+
+          # Build inbox summary
+          if [ "$HAS_INBOX" = "true" ]; then
+            INBOX_SUMMARY="Inbox file found at \`newsletters/inbox/${DATE}.md\`"
+          else
+            INBOX_SUMMARY="No inbox file for today."
+          fi
+
+          BODY=$(cat <<EOF
+## Newsletter Generation Request — ${DATE}
+
+This issue was auto-created by the daily newsletter workflow.
+
+### Data Available
+
+| Source | Status | Details |
+|--------|--------|---------|
+| Merged PRs | ${HAS_LEARNINGS} | ${PR_COUNT} PRs |
+| Manual inbox | ${HAS_INBOX} | ${INBOX_SUMMARY} |
+| Personal evals | ${HAS_EVALS} | \`benchmarks/evals/${DATE}__*.json\` |
+| Tool metrics | ${HAS_TOOLS} | \`benchmarks/tools/${DATE}__*.json\` |
+
+### Merged PRs (past 24h)
+
+${PR_SUMMARY}
+
+### Instructions for the Newsletter Agent
+
+1. Read \`newsletters/_templates/daily.md\` for the template.
+2. Read \`newsletters/config.json\` for source configuration.
+3. Collect today's learnings from the merged PRs listed above.
+4. Search for AI news across all 5 categories (models, tools, skills, repos, agents).
+5. Check public leaderboards for benchmark changes.
+6. Read any personal eval or tool metric JSON files for today.
+7. Read the inbox file if it exists.
+8. Generate the newsletter markdown.
+9. Archive to \`newsletters/${YEAR}/${MONTH}/${DATE}.md\`.
+10. Create and send the Braze email.
+11. Close this issue when done.
+
+### Output Paths
+
+- Archive: \`newsletters/${YEAR}/${MONTH}/${DATE}.md\`
+- Braze template: \`AI-Daily-Newsletter\`
+EOF
+          )
+
+          gh issue create \
+            --repo ${{ github.repository }} \
+            --title "newsletter: generate ${DATE}" \
+            --body "$BODY" \
+            --label "newsletter,automated"
+
+          echo "✅ Newsletter generation issue created"

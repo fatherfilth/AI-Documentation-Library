@@ -1,0 +1,88 @@
+name: Validate Benchmarks
+
+on:
+  push:
+    paths:
+      - 'benchmarks/**/*.json'
+  pull_request:
+    paths:
+      - 'benchmarks/**/*.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          FAILED=false
+          for f in $(find benchmarks -name '*.json' -not -name '.gitkeep'); do
+            if ! python3 -m json.tool "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::Invalid JSON: $f"
+              FAILED=true
+            else
+              echo "✅ Valid: $f"
+            fi
+          done
+          if [ "$FAILED" = true ]; then
+            exit 1
+          fi
+
+      - name: Validate file naming convention
+        run: |
+          FAILED=false
+          for f in $(find benchmarks/evals benchmarks/tools -name '*.json' -not -name '.gitkeep' 2>/dev/null); do
+            BASENAME=$(basename "$f")
+            if [[ ! "$BASENAME" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}__[a-z0-9-]+\.json$ ]]; then
+              echo "::error file=$f::File name must match YYYY-MM-DD__<name>.json. Got: $BASENAME"
+              FAILED=true
+            fi
+          done
+          for f in $(find benchmarks/models -name '*.json' -not -name '.gitkeep' 2>/dev/null); do
+            BASENAME=$(basename "$f")
+            if [[ ! "$BASENAME" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}\.json$ ]]; then
+              echo "::error file=$f::File name must match YYYY-MM-DD.json. Got: $BASENAME"
+              FAILED=true
+            fi
+          done
+          if [ "$FAILED" = true ]; then
+            exit 1
+          fi
+          echo "✅ All benchmark file names valid"
+
+      - name: Validate required fields
+        run: |
+          FAILED=false
+          # Model leaderboards must have date, source, leaderboard array
+          for f in $(find benchmarks/models -name '*.json' -not -name '.gitkeep' 2>/dev/null); do
+            for key in date source leaderboard; do
+              if ! python3 -c "import json; d=json.load(open('$f')); assert '$key' in d" 2>/dev/null; then
+                echo "::error file=$f::Missing required field: $key"
+                FAILED=true
+              fi
+            done
+          done
+          # Evals must have date, eval_name, model, score
+          for f in $(find benchmarks/evals -name '*.json' -not -name '.gitkeep' 2>/dev/null); do
+            for key in date eval_name model score; do
+              if ! python3 -c "import json; d=json.load(open('$f')); assert '$key' in d" 2>/dev/null; then
+                echo "::error file=$f::Missing required field: $key"
+                FAILED=true
+              fi
+            done
+          done
+          # Tools must have date, tool, metrics
+          for f in $(find benchmarks/tools -name '*.json' -not -name '.gitkeep' 2>/dev/null); do
+            for key in date tool metrics; do
+              if ! python3 -c "import json; d=json.load(open('$f')); assert '$key' in d" 2>/dev/null; then
+                echo "::error file=$f::Missing required field: $key"
+                FAILED=true
+              fi
+            done
+          done
+          if [ "$FAILED" = true ]; then
+            exit 1
+          fi
+          echo "✅ All required fields present"
