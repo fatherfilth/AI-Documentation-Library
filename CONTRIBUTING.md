@@ -43,26 +43,56 @@ conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md
 
 ## Workflow: How Every Chat Works
 
-> The agent handles categorization and publishing automatically. No manual commands needed.
+> The agent handles categorization, topic splitting, and publishing automatically.
 
 ### Phase 1: Conversation
 
 1. Start a new chat in the project.
-2. Just talk about the topic — ask questions, debug, explore.
-3. The agent silently infers the **category** and **slug** from context.
-4. The agent silently tracks confusion points, decisions, working snippets, and references.
+2. Just talk — ask questions, debug, explore.
+3. The agent silently infers **category**, **slug**, and tracks learnings.
+4. If the conversation covers multiple distinct topics, the agent maintains a **topic register** internally.
 
 ### Phase 2: Auto-Publish
 
-5. When the conversation reaches a natural end, the agent proposes a publish with category/slug/summary for confirmation.
-6. On confirmation, the agent creates branch → transcript → doc → index → PR.
-7. You review and merge.
+5. When the conversation reaches a natural end, the agent proposes:
+   - **Single topic:** one PR with category/slug/summary.
+   - **Multiple topics:** a split plan showing one PR per topic.
+6. On confirmation, the agent creates branch(es) → transcript → doc(s) → index → PR(s).
+7. **PRs auto-merge** after CI passes. No manual merge step needed.
 
-The user may also say "Publish" at any time to trigger Phase 2 early.
-The user may say "Skip" or "Don't publish" to end without a PR.
-The user may override the inferred category or slug during confirmation.
+### Sub-Agency: Multi-Topic Conversations
+
+When one conversation covers multiple distinct topics, the agent creates **one PR per topic**:
+
+- Each topic gets its own branch (`topic/<slug>`)
+- Each topic gets its own doc page (`docs/<category>/<slug>.md`)
+- All topics share **one transcript** (stored under the primary topic's path)
+- Each doc cross-references related docs in the Appendix
+- Each topic gets its own index row
 
 **Full agent instructions live in `.claude/PROJECT_INSTRUCTIONS.md`.**
+
+---
+
+## Document Format: Research Article
+
+All doc pages follow a **research article structure** defined in `docs/_templates/topic.md`:
+
+| Section | Purpose |
+|---------|---------|
+| **Abstract** | 3–5 sentence standalone summary |
+| **1. Introduction** | Problem statement, scope, key terms |
+| **2. Background & Prior Work** | What existed before, what's been tried |
+| **3. Methodology / Approach** | Setup, process, how we got here |
+| **4. Findings** | Specific, falsifiable claims with evidence |
+| **5. Confusion Points** | Misunderstandings from the conversation (most valuable section) |
+| **6. Failure Modes & Gotchas** | Trigger → symptom → fix |
+| **7. Analysis** | Strengths, limitations, comparison to alternatives |
+| **8. Recommendations** | Decision checklist, next steps |
+| **9. Open Questions & Unknowns** | Honest gaps, unverified references |
+| **References** | Numbered, labeled links — no bare URLs |
+| **Appendix** | Raw data, configs, related documents |
+| **Changelog** | Version history |
 
 ---
 
@@ -98,8 +128,11 @@ participants:
   - claude
 source: claude.ai | api | claude-code
 summary: "One-line summary of the conversation."
+related_topics: []
 ---
 ```
+
+- For multi-topic conversations, `related_topics` lists all other slugs from the same chat.
 
 ### C. Index Update
 
@@ -107,7 +140,7 @@ summary: "One-line summary of the conversation."
 docs/_index/README.md
 ```
 
-- Add one row above the `<!-- NEW ROWS ABOVE THIS LINE -->` comment.
+- Add one row per topic above the `<!-- NEW ROWS ABOVE THIS LINE -->` comment.
 - Row format:
 
 ```
@@ -155,7 +188,11 @@ No direct commits to `main`. Ever.
 - [x] No empty sections
 ```
 
-- **Do not squash-merge.** Standard merge to preserve commit history.
+### Auto-Merge
+
+PRs from `topic/*` branches **auto-merge** after all CI checks pass. The `auto-merge.yml` workflow handles this. No manual merge step is required.
+
+If auto-merge fails (e.g. merge conflict), the PR stays open for manual resolution.
 
 ---
 
@@ -169,6 +206,7 @@ Before creating a PR, verify:
 4. `grep '{REQUIRED}' docs/<category>/<slug>.md` → returns **zero** matches (all filled).
 5. Branch name starts with `topic/`.
 6. Slug is ≤ 40 characters, lowercase, hyphenated, no dates.
+7. If multi-topic: all related docs cross-reference each other in Appendix B.
 
 If any check fails, **stop and fix before opening the PR.**
 
@@ -184,15 +222,20 @@ Agents may only read/write within the repository working tree. No access to home
 
 | Scope | Purpose |
 |-------|---------|
-| `contents: write` | Create branches, push commits |
-| `pull-requests: write` | Open PRs |
+| `contents: write` | Create branches, push commits, auto-merge |
+| `pull-requests: write` | Open and merge PRs |
 | `metadata: read` | List repo info |
 
 No `admin`, no `delete`, no `actions: write`. Token scoped to this single repo.
 
-### C. CI Checks (enforced via GitHub Actions)
+### C. CI Workflows
 
-The `pr-validation` workflow runs on every PR and **must pass** before merge. See `.github/workflows/pr-validation.yml`.
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| `pr-validation.yml` | Every PR to `main` | Validates structure, template, frontmatter, secrets |
+| `auto-merge.yml` | After CI passes | Auto-merges `topic/*` PRs |
+| `daily-newsletter.yml` | Daily 06:00 UTC | Collects data, creates issue, sends email |
+| `validate-benchmarks.yml` | Benchmark file changes | Validates JSON format and schemas |
 
 ---
 
@@ -202,7 +245,7 @@ The `pr-validation` workflow runs on every PR and **must pass** before merge. Se
 
 1. User pastes 3–10 quality reference links.
 2. Agent builds a **research pack** first, then the doc page.
-3. All sources must appear in the **References** section with labeled links.
+3. All sources must appear in the **References** section with numbered, labeled links.
 
 ### With a research-fetch tool
 
@@ -223,6 +266,7 @@ The `pr-validation` workflow runs on every PR and **must pass** before merge. Se
 | Branch pattern | `topic/<slug>` |
 | Slug format | lowercase, hyphenated, ≤40 chars, no dates, no category prefix |
 | Doc path | `docs/<category>/<slug>.md` |
+| Doc format | Research article (see template) |
 | Transcript path | `conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md` |
 | Index path | `docs/_index/README.md` |
 | PR title format | `docs(<category>): <slug>` |
@@ -230,6 +274,6 @@ The `pr-validation` workflow runs on every PR and **must pass** before merge. Se
 | Template | `docs/_templates/topic.md` |
 | Agent instructions | `.claude/PROJECT_INSTRUCTIONS.md` |
 | Direct commits to main | **Forbidden** |
+| Manual merge required | **No — auto-merge after CI** |
+| Multi-topic conversations | **Split into separate PRs** |
 | Empty references section | **Forbidden** |
-| Manual categorization needed | **No — agent auto-infers** |
-| Manual publish command needed | **No — agent auto-triggers** |
