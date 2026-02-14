@@ -7,7 +7,8 @@
     "repo": "fatherfilth/AI-Documentation-Library",
     "archive_path": "newsletters/YYYY/MM/YYYY-MM-DD.md",
     "inbox_path": "newsletters/inbox/YYYY-MM-DD.md",
-    "template_path": "newsletters/_templates/daily.md"
+    "template_path": "newsletters/_templates/daily.md",
+    "email_template_path": "newsletters/_templates/email.html"
   },
   "sources": {
     "learnings": {
@@ -73,10 +74,17 @@
     },
     "email": {
       "enabled": true,
-      "provider": "braze",
-      "template_name": "AI-Daily-Newsletter",
+      "provider": "smtp",
+      "method": "GitHub Actions via dawidd6/action-send-mail",
       "subject_format": "AI Daily — {DATE} — {HEADLINE}",
-      "preheader_format": "{LEARNING_COUNT} learnings · {NEWS_COUNT} news · {BENCHMARK_CHANGES} benchmark changes"
+      "secrets_required": [
+        "SMTP_SERVER",
+        "SMTP_PORT",
+        "SMTP_USERNAME",
+        "SMTP_PASSWORD",
+        "NEWSLETTER_TO",
+        "NEWSLETTER_FROM"
+      ]
     }
   },
   "categories": ["models", "tools", "skills", "repos", "agents"]
