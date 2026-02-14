@@ -31,6 +31,7 @@ Do NOT ask the user for a category. Infer it from context using these definition
 | `skills` | Discussion is about a technique, workflow, methodology, or transferable practice | prompt engineering, RAG pipelines, few-shot patterns, eval design |
 | `repos` | Discussion is about a specific GitHub repository — its structure, usage, or contribution patterns | open-source repos, internal codebases, starter templates |
 | `agents` | Discussion is about AI agent architectures, configurations, orchestration, or multi-agent systems | Claude Code agents, AutoGPT, crew.ai, agent tool-use patterns |
+| `projects` | Discussion is about building a specific product or project — the end-to-end process, decisions, tools used, and outcomes | app builds, SaaS products, side projects, client work, hackathon entries |
 
 ### Auto-Slug
 
@@ -46,7 +47,7 @@ Generate a slug silently using these rules:
 While chatting, internally maintain a **topic register** — a running list of distinct topics covered. For each topic, track:
 
 - **Topic label**: what this topic would be called as a standalone doc
-- **Category**: which of the 5 categories it belongs to
+- **Category**: which of the 6 categories it belongs to
 - **Slug**: generated slug
 - **Confusion points**: misunderstandings specific to this topic
 - **Decisions**: choices the user made related to this topic
@@ -154,14 +155,14 @@ Remove filler. Preserve the user's voice and key exchanges.
 Group by subtopic if the conversation was long.>
 ```
 
-#### Step 3: Build the doc page (Research Article Format)
+#### Step 3: Build the doc page
 
 Path: `docs/<category>/<slug>.md`
 
-- Use the template at `docs/_templates/topic.md` exactly.
-- The template follows a **research article structure**: Abstract → Introduction → Background → Methodology → Findings → Confusion Points → Failure Modes → Analysis → Recommendations → Open Questions → References → Appendix → Changelog.
+- **For `models`, `tools`, `skills`, `repos`, `agents`:** Use the template at `docs/_templates/topic.md` (research article format).
+- **For `projects`:** Use the template at `docs/_templates/project.md` (build journal format).
 - Fill EVERY section. No `{REQUIRED}` placeholders may remain.
-- Confusion Points table must be populated from what actually happened in the chat.
+- Confusion Points / Challenges table must be populated from what actually happened in the chat.
 - References must be real links — no placeholder URLs. Use numbered references for in-text citation.
 - If a section truly doesn't apply, write `N/A — <reason>`.
 - In the **Appendix > Related Documents** section, link to any other docs created from the same conversation.
@@ -193,7 +194,7 @@ Path: `docs/_index/README.md`
 ## Checklist
 
 - [x] Branch named `topic/<slug>`
-- [x] Doc page at `docs/<category>/<slug>.md` using `topic.md` template
+- [x] Doc page at `docs/<category>/<slug>.md` using `topic.md` or `project.md` template
 - [x] Transcript at `conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md` with YAML frontmatter
 - [x] Index row added to `docs/_index/README.md`
 - [x] All `{REQUIRED}` placeholders filled
@@ -265,6 +266,27 @@ The doc template follows a research article structure. When filling it, adhere t
 
 ### Open Questions
 - Be honest about gaps. "We don't know X yet" is more valuable than a guess.
+
+---
+
+## Build Journal Quality Standards (Projects)
+
+When writing a project doc using `project.md`, adhere to these standards:
+
+### Overview
+- 3–5 sentences. What was built, why, and what state it's in now.
+
+### Build Phases
+- Chronological. Each phase represents a meaningful chunk of work, not every commit.
+- Include the decisions, pivots, and surprises — not just what happened but why.
+
+### Key Decisions
+- Decision table is critical. Capture the options you considered, not just what you chose.
+- Future-you wants to know *why* you picked Next.js over Remix, not just that you did.
+
+### Retrospective
+- Be honest. "What I'd do differently" is the most valuable section for future projects.
+- Surprises section captures the things no documentation would have warned you about.
 
 ---
 
