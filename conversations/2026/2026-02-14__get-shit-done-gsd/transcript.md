@@ -7,6 +7,7 @@ participants:
   - claude
 source: claude.ai
 summary: "Understanding what GSD is, installing it on Windows, evaluating alternatives, and discovering Claude Code tools."
+related_topics: []
 ---
 
 # Transcript: Get Shit Done (GSD) — Install, Evaluate, and Discover
