@@ -43,7 +43,7 @@ conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md
 
 ## Workflow: How Every Chat Works
 
-> The agent handles categorization, topic splitting, and publishing automatically.
+> The agent handles everything automatically. No confirmation. No "Publish" command. No manual merge.
 
 ### Phase 1: Conversation
 
@@ -52,13 +52,23 @@ conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md
 3. The agent silently infers **category**, **slug**, and tracks learnings.
 4. If the conversation covers multiple distinct topics, the agent maintains a **topic register** internally.
 
-### Phase 2: Auto-Publish
+### Phase 2: Auto-Publish (no confirmation needed)
 
-5. When the conversation reaches a natural end, the agent proposes:
-   - **Single topic:** one PR with category/slug/summary.
-   - **Multiple topics:** a split plan showing one PR per topic.
-6. On confirmation, the agent creates branch(es) → transcript → doc(s) → index → PR(s).
-7. **PRs auto-merge** after CI passes. No manual merge step needed.
+5. As soon as the agent has enough material (Abstract + 2 Findings + 2 Confusion Points), it publishes **inline with its response** — no prompt, no "Go ahead?" question.
+6. The agent creates branch(es) → transcript → doc(s) → index → PR(s) silently.
+7. A one-line note appears at the end of the response: `📄 Published <slug> → PR opened, will auto-merge after CI.`
+8. **PRs auto-merge** after CI passes. No manual merge step.
+9. If the conversation continues after publishing and produces new material, the agent publishes an **update PR** for the same doc.
+
+### Publish Triggers
+
+| Trigger | When | Threshold |
+|---------|------|-----------|
+| **Maturity** | Topic has enough material for a full doc | Abstract + 2 Findings + 2 Confusion Points |
+| **Signal** | User signals completion | "thanks", "got it", "done", etc. |
+| **Topic shift** | User moves to an unrelated topic | Agent publishes the previous topic, starts tracking the new one |
+| **Staleness** | 5+ exchanges on a topic without publishing | Abstract + 1 Finding + 1 Confusion Point (lower bar — ship a draft) |
+| **Imperfect > absent** | Any doubt about whether to publish | Always publish. An imperfect doc is better than no doc. |
 
 ### Sub-Agency: Multi-Topic Conversations
 
@@ -274,6 +284,8 @@ No `admin`, no `delete`, no `actions: write`. Token scoped to this single repo.
 | Template | `docs/_templates/topic.md` |
 | Agent instructions | `.claude/PROJECT_INSTRUCTIONS.md` |
 | Direct commits to main | **Forbidden** |
+| Confirmation required | **No — agent publishes autonomously** |
 | Manual merge required | **No — auto-merge after CI** |
 | Multi-topic conversations | **Split into separate PRs** |
 | Empty references section | **Forbidden** |
+| Unpublished conversations | **Forbidden — always publish, even imperfectly** |
