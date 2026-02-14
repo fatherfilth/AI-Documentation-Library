@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Documentation Daily — {{DATE}}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f4f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<div style="max-width:640px;margin:0 auto;background:#ffffff;">
+
+  <!-- HEADER -->
+  <div style="background:#1a1a2e;color:#ffffff;padding:32px 24px;">
+    <h1 style="margin:0;font-size:24px;font-weight:700;">&#128218; AI Documentation Daily</h1>
+    <div style="color:#a0a0b8;font-size:14px;margin-top:4px;">{{DATE}}</div>
+    <div style="color:#7c7c9a;font-size:12px;margin-top:2px;">Edition #{{EDITION}}</div>
+  </div>
+
+  <!-- TODAY'S LEARNINGS -->
+  <div style="padding:24px;border-bottom:1px solid #e8e8ed;">
+    <h2 style="font-size:18px;font-weight:700;color:#1a1a2e;margin:0 0 16px;">&#128218; Today's Learnings</h2>
+    {{LEARNINGS_HTML}}
+  </div>
+
+  <!-- AI NEWS -->
+  <div style="padding:24px;border-bottom:1px solid #e8e8ed;">
+    <h2 style="font-size:18px;font-weight:700;color:#1a1a2e;margin:0 0 16px;">&#128478;&#65039; AI News</h2>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #f0f0f4;">
+        <span style="display:inline-block;background:#e8e8ed;color:#1a1a2e;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;">Models</span>
+      </div>
+      {{NEWS_MODELS_HTML}}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #f0f0f4;">
+        <span style="display:inline-block;background:#e8e8ed;color:#1a1a2e;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;">Tools</span>
+      </div>
+      {{NEWS_TOOLS_HTML}}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #f0f0f4;">
+        <span style="display:inline-block;background:#e8e8ed;color:#1a1a2e;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;">Skills</span>
+      </div>
+      {{NEWS_SKILLS_HTML}}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #f0f0f4;">
+        <span style="display:inline-block;background:#e8e8ed;color:#1a1a2e;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;">Repos</span>
+      </div>
+      {{NEWS_REPOS_HTML}}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #f0f0f4;">
+        <span style="display:inline-block;background:#e8e8ed;color:#1a1a2e;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;">Agents</span>
+      </div>
+      {{NEWS_AGENTS_HTML}}
+    </div>
+  </div>
+
+  <!-- DAILY BENCHMARKS -->
+  <div style="padding:24px;border-bottom:1px solid #e8e8ed;">
+    <h2 style="font-size:18px;font-weight:700;color:#1a1a2e;margin:0 0 16px;">&#128202; Daily Benchmarks</h2>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;">AI Leaderboard Watch</div>
+      {{BENCHMARKS_LEADERBOARD_HTML}}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;">Personal Evals</div>
+      {{BENCHMARKS_EVALS_HTML}}
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:600;color:#555;margin-bottom:8px;">Tool Performance</div>
+      {{BENCHMARKS_TOOLS_HTML}}
+    </div>
+  </div>
+
+  <!-- META -->
+  <div style="background:#f9f9fb;padding:20px 24px;">
+    <table style="width:100%;border-collapse:collapse;">
+      <tr>
+        <td style="text-align:center;padding:8px;">
+          <div style="font-size:24px;font-weight:700;color:#1a1a2e;">{{TOTAL_DOCS}}</div>
+          <div style="font-size:11px;color:#888;text-transform:uppercase;">Topics Documented</div>
+        </td>
+        <td style="text-align:center;padding:8px;">
+          <div style="font-size:24px;font-weight:700;color:#1a1a2e;">{{TOTAL_TRANSCRIPTS}}</div>
+          <div style="font-size:11px;color:#888;text-transform:uppercase;">Conversations</div>
+        </td>
+        <td style="text-align:center;padding:8px;">
+          <div style="font-size:24px;font-weight:700;color:#1a1a2e;">{{STREAK}}</div>
+          <div style="font-size:11px;color:#888;text-transform:uppercase;">Day Streak</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="background:#1a1a2e;color:#7c7c9a;padding:24px;font-size:12px;text-align:center;">
+    <p style="margin:0;">Generated from <a href="https://github.com/fatherfilth/AI-Documentation-Library" style="color:#a0a0b8;text-decoration:none;">AI Documentation Library</a></p>
+  </div>
+
+</div>
+</body>
+</html>
