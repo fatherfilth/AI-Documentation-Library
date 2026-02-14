@@ -4,6 +4,7 @@
 
 | Slug | Category | Summary | Doc | Transcript | Date |
 |------|----------|---------|-----|------------|------|
+| claude-code-gui-wrappers | tools | Survey of GUI wrappers, terminal managers, and visualization tools for Claude Code — Claude Squad, Agent Viewer, NTM, Claudia, Nimbalyst, Caudex, CodePilot | [doc](../tools/claude-code-gui-wrappers.md) | [transcript](../../conversations/2026/2026-02-14__claude-code-gui-wrappers/transcript.md) | 2026-02-14 |
 | claude-code-parallel-sessions | tools | Running multiple Claude Code instances in parallel using terminal tabs, git worktrees, and experimental agent teams | [doc](../tools/claude-code-parallel-sessions.md) | [transcript](../../conversations/2026/2026-02-14__terminal-vs-desktop-for-ai/transcript.md) | 2026-02-14 |
 | claude-code-project-setup | tools | Setting up projects in Claude Code using CLAUDE.md, /init, and directory-based context instead of desktop-style project containers | [doc](../tools/claude-code-project-setup.md) | [transcript](../../conversations/2026/2026-02-14__terminal-vs-desktop-for-ai/transcript.md) | 2026-02-14 |
 | get-shit-done-gsd | tools | Install, evaluate, and discover GSD — a meta-prompting and context engineering system for Claude Code | [doc](../tools/get-shit-done-gsd.md) | [transcript](../../conversations/2026/2026-02-14__get-shit-done-gsd/transcript.md) | 2026-02-14 |
