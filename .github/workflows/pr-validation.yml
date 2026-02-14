@@ -14,26 +14,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate branch name
+      - name: Detect branch type
         run: |
           BRANCH="${{ github.head_ref }}"
-          if [[ ! "$BRANCH" =~ ^topic/[a-z0-9-]+$ ]]; then
-            echo "::error::Branch must match 'topic/<slug>' (lowercase, hyphenated). Got: $BRANCH"
+          if [[ "$BRANCH" =~ ^infra/ ]]; then
+            echo "BRANCH_TYPE=infra" >> "$GITHUB_ENV"
+            echo "✅ Infrastructure branch detected: $BRANCH — skipping doc validation"
+          elif [[ "$BRANCH" =~ ^fix/ ]]; then
+            echo "BRANCH_TYPE=fix" >> "$GITHUB_ENV"
+            echo "✅ Fix branch detected: $BRANCH — skipping doc validation"
+          elif [[ "$BRANCH" =~ ^topic/[a-z0-9-]+$ ]]; then
+            SLUG="${BRANCH#topic/}"
+            if [ ${#SLUG} -gt 40 ]; then
+              echo "::error::Slug exceeds 40 chars: $SLUG (${#SLUG} chars)"
+              exit 1
+            fi
+            if [[ "$SLUG" =~ [0-9]{4}-[0-9]{2} ]]; then
+              echo "::error::Slug must not contain dates: $SLUG"
+              exit 1
+            fi
+            echo "BRANCH_TYPE=topic" >> "$GITHUB_ENV"
+            echo "SLUG=$SLUG" >> "$GITHUB_ENV"
+            echo "✅ Topic branch valid: $BRANCH (slug: $SLUG)"
+          else
+            echo "::error::Branch must match 'topic/<slug>', 'infra/<name>', or 'fix/<name>'. Got: $BRANCH"
             exit 1
           fi
-          SLUG="${BRANCH#topic/}"
-          if [ ${#SLUG} -gt 40 ]; then
-            echo "::error::Slug exceeds 40 chars: $SLUG (${#SLUG} chars)"
-            exit 1
-          fi
-          if [[ "$SLUG" =~ [0-9]{4}-[0-9]{2} ]]; then
-            echo "::error::Slug must not contain dates: $SLUG"
-            exit 1
-          fi
-          echo "SLUG=$SLUG" >> "$GITHUB_ENV"
-          echo "✅ Branch name valid: $BRANCH (slug: $SLUG)"
 
       - name: Detect category and validate doc page exists
+        if: env.BRANCH_TYPE == 'topic'
         run: |
           VALID_CATS=("models" "tools" "skills" "repos" "agents" "projects")
           FOUND=false
@@ -52,6 +61,7 @@ jobs:
           fi
 
       - name: Validate template compliance (no unfilled placeholders)
+        if: env.BRANCH_TYPE == 'topic'
         run: |
           DOC="docs/${{ env.CAT }}/${{ env.SLUG }}.md"
           if grep -q '{REQUIRED}' "$DOC"; then
@@ -62,6 +72,7 @@ jobs:
           echo "✅ No {REQUIRED} placeholders remain"
 
       - name: Validate transcript archive exists
+        if: env.BRANCH_TYPE == 'topic'
         run: |
           TRANSCRIPT=$(find conversations/ -path "*__${{ env.SLUG }}/transcript.md" 2>/dev/null | head -1)
           if [ -z "$TRANSCRIPT" ]; then
@@ -72,6 +83,7 @@ jobs:
           echo "✅ Transcript found: $TRANSCRIPT"
 
       - name: Validate transcript frontmatter
+        if: env.BRANCH_TYPE == 'topic'
         run: |
           # Check YAML frontmatter exists and has required keys
           HEAD=$(sed -n '1,/^---$/p' "${{ env.TRANSCRIPT }}" | tail -n +2)
@@ -88,6 +100,7 @@ jobs:
           echo "✅ Transcript frontmatter valid"
 
       - name: Validate index entry
+        if: env.BRANCH_TYPE == 'topic'
         run: |
           if ! grep -q "${{ env.SLUG }}" docs/_index/README.md; then
             echo "::error::No index row found for slug '${{ env.SLUG }}' in docs/_index/README.md"
@@ -96,6 +109,7 @@ jobs:
           echo "✅ Index row found for ${{ env.SLUG }}"
 
       - name: Check for bare URLs in doc page
+        if: env.BRANCH_TYPE == 'topic'
         run: |
           DOC="docs/${{ env.CAT }}/${{ env.SLUG }}.md"
           # Match bare http(s) URLs not inside markdown link syntax [...](...)
@@ -127,14 +141,23 @@ jobs:
 
       - name: Summary
         run: |
-          echo "## ✅ All checks passed" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Branch name | ✅ topic/${{ env.SLUG }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Doc page | ✅ docs/${{ env.CAT }}/${{ env.SLUG }}.md |" >> $GITHUB_STEP_SUMMARY
-          echo "| Template compliance | ✅ No unfilled placeholders |" >> $GITHUB_STEP_SUMMARY
-          echo "| Transcript | ✅ ${{ env.TRANSCRIPT }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Frontmatter | ✅ All required keys present |" >> $GITHUB_STEP_SUMMARY
-          echo "| Index entry | ✅ Row exists |" >> $GITHUB_STEP_SUMMARY
-          echo "| Secrets scan | ✅ Clean |" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ env.BRANCH_TYPE }}" = "topic" ]; then
+            echo "## ✅ All checks passed (topic branch)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Branch name | ✅ topic/${{ env.SLUG }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| Doc page | ✅ docs/${{ env.CAT }}/${{ env.SLUG }}.md |" >> $GITHUB_STEP_SUMMARY
+            echo "| Template compliance | ✅ No unfilled placeholders |" >> $GITHUB_STEP_SUMMARY
+            echo "| Transcript | ✅ ${{ env.TRANSCRIPT }} |" >> $GITHUB_STEP_SUMMARY
+            echo "| Frontmatter | ✅ All required keys present |" >> $GITHUB_STEP_SUMMARY
+            echo "| Index entry | ✅ Row exists |" >> $GITHUB_STEP_SUMMARY
+            echo "| Secrets scan | ✅ Clean |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ✅ All checks passed (${{ env.BRANCH_TYPE }} branch)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+            echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Branch type | ✅ ${{ env.BRANCH_TYPE }} (doc validation skipped) |" >> $GITHUB_STEP_SUMMARY
+            echo "| Secrets scan | ✅ Clean |" >> $GITHUB_STEP_SUMMARY
+          fi
