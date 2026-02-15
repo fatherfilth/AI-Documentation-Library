@@ -18,7 +18,7 @@
 
 entries:
 
-  # ── TOOLS / CODING ──────────────────────────────────────────────────
+  # ── TOOLS / CODING ──────────────────────────────────────────────────────
 
   - name: Claude Code
     type: tool
@@ -41,6 +41,18 @@ entries:
     where_used: ""
     verdict: Essential infrastructure for frontend AI dev — tier 1 alongside v0
     doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Playwright MCP
+    type: tool
+    subcategory: coding
+    status: researched
+    rank: 3
+    use_case: Browser automation for AI agents — testing, form filling, UI verification
+    where_used: ""
+    verdict: Official Microsoft backing, CLI+SKILLS mode is the future — heavy on tokens though
+    doc_link: docs/tools/popular-mcp-servers.md
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
@@ -82,7 +94,7 @@ entries:
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
-  # ── TOOLS / UI-UX ──────────────────────────────────────────────────
+  # ── TOOLS / UI-UX ────────────────────────────────────────────────────
 
   - name: v0
     type: tool
@@ -180,7 +192,7 @@ entries:
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
-  # ── TOOLS / VIDEO-GEN ──────────────────────────────────────────────
+  # ── TOOLS / VIDEO-GEN ────────────────────────────────────────────────
 
   - name: SeedDance 2.0
     type: tool
@@ -256,6 +268,18 @@ entries:
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
+  - name: Glif MCP
+    type: tool
+    subcategory: design
+    status: researched
+    rank: 4
+    use_case: Visual AI workflow execution — image gen, memes, ComfyUI pipelines via MCP
+    where_used: ""
+    verdict: Only MCP for generative media — creative but pre-1.0 and small community
+    doc_link: docs/tools/popular-mcp-servers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
   # ── TOOLS / PRODUCTIVITY (GUI wrappers & session management) ───────
 
   - name: Claude Squad
@@ -327,6 +351,34 @@ entries:
     where_used: ""
     verdict: Solves session memory loss — pairs well with Claude Code statusline
     doc_link: docs/tools/cleo-memory-and-statusline.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / RESEARCH ─────────────────────────────────────────────────
+
+  - name: Perplexity MCP
+    type: tool
+    subcategory: research
+    status: researched
+    rank: 1
+    use_case: Real-time web search, deep research, and reasoning via Sonar models in any MCP client
+    where_used: ""
+    verdict: Strongest MCP for live research — but overlaps with built-in search in Claude/ChatGPT
+    doc_link: docs/tools/popular-mcp-servers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / DATA ─────────────────────────────────────────────────────
+
+  - name: Firecrawl MCP
+    type: tool
+    subcategory: data
+    status: researched
+    rank: 1
+    use_case: Web scraping, structured extraction, and site crawling for RAG and data pipelines
+    where_used: ""
+    verdict: Most broadly useful MCP for dev workflows — map→scrape is the key pattern
+    doc_link: docs/tools/popular-mcp-servers.md
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
@@ -462,7 +514,7 @@ entries:
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
-  # ── WORKFLOWS / DESIGN ─────────────────────────────────────────────
+  # ── WORKFLOWS / DESIGN ───────────────────────────────────────────
 
   - name: Multi-agent design generation
     type: workflow
