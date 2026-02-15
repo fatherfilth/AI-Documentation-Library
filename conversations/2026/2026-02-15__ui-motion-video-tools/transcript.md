@@ -6,7 +6,7 @@ participants:
   - user
   - claude
 source: claude.ai
-summary: "Evaluating AI tools for turning UI/UX designs into motion showcase videos and interactive production animations."
+summary: "Evaluating AI tools for turning UI/UX designs into motion showcase videos and interactive production animations — including SeedDance 2.0 for AI-generated cinematic demos."
 related_topics: []
 ---
 
@@ -59,6 +59,37 @@ Organized into three tiers:
 
 Conclusion: Jitter + Rive covers approximately 90% of needs across both pipelines.
 
+## SeedDance 2.0 Discovery
+
+**User:** Shared article from speedy devv (Feb 12, 2026) about SeedDance 2.0 by ByteDance — an AI video generation model that takes app screenshots and produces cinematic product demo videos with proper camera movements (dolly-in, orbit, crane shots) in 30-90 seconds.
+
+**Claude:** Researched SeedDance 2.0 and found it fills a fundamentally different niche from Jitter/After Effects. Key findings:
+
+**How it differs:** Instead of animating individual UI layers, SeedDance treats your UI as a single image and generates cinematic video with AI-controlled camera motion, lighting, reflections, and particle effects. Prompt framework: Subject → Action → Camera → Style → Constraints.
+
+**Updated showcase video tiers:**
+
+| Need | Tool | Time | Control |
+|---|---|---|---|
+| Fast cinematic product demos | SeedDance 2.0 | 2-10 min | Low (prompt-based) |
+| Precise UI layer animation | Jitter | 30-60 min | High (per-element) |
+| Cinematic hero videos, compositing | After Effects | Hours-days | Total |
+
+**Access:** WaveSpeed (wavespeed.ai) is the cleanest English-language option with Stripe payments. Official Jimeng portal requires Chinese account. Cost ~$0.50/generation after free trial.
+
+**Caveats noted:**
+- Microscopic text/logos can flicker — design UI for video (big type, clear icons)
+- Over-describing the image in prompt causes model to change the UI rather than animate it
+- Disney cease-and-desist letter sent to ByteDance over copyrighted character outputs (Feb 2026)
+- Does NOT affect Pipeline 2 (interactive production animations) at all — outputs are rendered video only
+
+**Updated final stack:**
+
+| Pipeline | Fast/AI | Precise/Manual | High-Production |
+|---|---|---|---|
+| Showcase Videos | SeedDance 2.0 | Jitter | After Effects |
+| Production Animations | LottieFiles + Motion Copilot | Rive | Rive |
+
 ## Key Research Sources
 
 - Jitter.video official site and Product Hunt reviews
@@ -68,3 +99,7 @@ Conclusion: Jitter + Rive covers approximately 90% of needs across both pipeline
 - illustration.app: Best AI Animation Tools for UI/UX Designers in 2025
 - Hatch Studios: Best AI Tools for Motion Designers in 2025
 - DesignRush: Top 5 AI Tools Transforming UI/UX Design in 2025
+- SitePoint: Seedance 2.0 Developer Guide & Comparison (Feb 2026)
+- WaveSpeed blog: Seedance 2.0 Complete Guide
+- speedy devv: "Make Your App Demo In 10 Minutes" (Feb 12, 2026)
+- ByteDance Seed Research: seed.bytedance.com/en/seedance2_0
