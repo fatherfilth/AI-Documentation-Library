@@ -2,7 +2,7 @@
 
 > **Status:** `stable`
 > **Created:** 2026-02-14
-> **Updated:** 2026-02-14
+> **Updated:** 2026-02-15
 > **Author:** Claude (documentation agent)
 
 ---
@@ -117,6 +117,19 @@ Think of GSD as a project manager sitting between you and Claude Code. You descr
 
 ---
 
+## Bugfixing and Existing Codebases
+
+GSD is optimized for building new things, but it has paths for maintenance work depending on scope:
+
+| Scenario | Command | Notes |
+|----------|---------|-------|
+| Bug fix or small DB change | `/gsd:quick` | Lightweight: planner + executor only, no research/plan checker/verifier. Lives in `.planning/quick/` |
+| Systematic debugging | `/gsd:debug [desc]` | Tracks what's been tried with persistent state across the session |
+| Major refactor or new feature on existing code | `/gsd:map-codebase` → `/gsd:new-project` → phase loop | `map-codebase` analyzes your stack/architecture/conventions first, so planning is grounded in your actual codebase |
+| Routine maintenance (add column, add index) | Use Claude Code directly | GSD overhead not worth it for simple, isolated changes |
+
+---
+
 ## Confusion Points
 
 | # | What I thought | What's actually true |
@@ -128,6 +141,7 @@ Think of GSD as a project manager sitting between you and Claude Code. You descr
 | 5 | GSD is the only option for structured Claude Code development | There's a growing ecosystem of spec-driven development tools — cc-sdd, spec-kit, claude-code-spec-workflow, or even DIY with native Claude Code features |
 | 6 | There's a central app store for Claude Code tools | Discovery is fragmented across GitHub awesome lists, the Claude Code plugin marketplace, aggregator sites, Discord communities, and blog posts |
 | 7 | `/gsd:new-project` runs all the phases automatically | `new-project` only creates the roadmap (PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md). You then drive each phase manually: discuss → plan → execute → verify |
+| 8 | GSD is only for greenfield projects | GSD handles existing codebases via `/gsd:map-codebase`, bug fixes via `/gsd:quick`, and debugging via `/gsd:debug` — but its sweet spot is still building new things |
 
 ---
 
@@ -213,3 +227,4 @@ Think of GSD as a project manager sitting between you and Claude Code. You descr
 | 2026-02-14 | Initial draft from installation walkthrough session | Claude (documentation agent) |
 | 2026-02-14 | Expanded with alternatives comparison, when-to-use guidance, and tool discovery channels | Claude (documentation agent) |
 | 2026-02-14 | Added full command reference, workflow clarification (new-project vs phases), and confusion point #7 | Claude (documentation agent) |
+| 2026-02-15 | Added bugfixing/existing codebase guidance, confusion point #8 | Claude (documentation agent) |
