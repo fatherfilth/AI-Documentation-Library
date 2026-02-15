@@ -1,6 +1,6 @@
 name: Auto-Merge
 
-# Auto-merge topic PRs after all CI checks pass.
+# Auto-merge topic and leaderboard PRs after all CI checks pass.
 # This eliminates the manual merge step — the agent opens the PR,
 # CI validates it, and this workflow merges it.
 
@@ -36,27 +36,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "Looking for open topic/* PRs with passing checks..."
+          echo "Looking for open topic/* and leaderboard/* PRs with passing checks..."
 
-          # Get all open PRs from topic/ branches
-          TOPIC_PRS=$(gh pr list \
+          # Get all open PRs from auto-mergeable branches (topic/ and leaderboard/)
+          ELIGIBLE_PRS=$(gh pr list \
             --repo ${{ github.repository }} \
             --state open \
-            --json number,headRefName,title,statusCheckRollup \
-            --jq '.[] | select(.headRefName | startswith("topic/"))')
+            --json number,headRefName,title \
+            --jq '.[] | select(.headRefName | (startswith("topic/") or startswith("leaderboard/"))) | .number')
 
-          if [ -z "$TOPIC_PRS" ]; then
-            echo "No open topic/* PRs found."
+          if [ -z "$ELIGIBLE_PRS" ]; then
+            echo "No open topic/* or leaderboard/* PRs found."
             exit 0
           fi
 
           # Check each PR
-          gh pr list \
-            --repo ${{ github.repository }} \
-            --state open \
-            --json number,headRefName,title \
-            --jq '.[] | select(.headRefName | startswith("topic/")) | .number' | \
-          while read -r PR_NUM; do
+          echo "$ELIGIBLE_PRS" | while read -r PR_NUM; do
             echo ""
             echo "──────────────────────────────────────"
             echo "Checking PR #$PR_NUM..."
