@@ -52,14 +52,15 @@ conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md
 2. Just talk — ask questions, debug, explore.
 3. The agent silently infers **category**, **slug**, and tracks learnings.
 4. If the conversation covers multiple distinct topics, the agent maintains a **topic register** internally.
+5. When a tool, skill, model, application, or workflow is substantively discussed, the agent asks whether you've used it or are just researching — then captures your ranking for the leaderboard.
 
 ### Phase 2: Auto-Publish (no confirmation needed)
 
-5. As soon as the agent has enough material (Abstract + 2 Findings + 2 Confusion Points), it publishes **inline with its response** — no prompt, no "Go ahead?" question.
-6. The agent creates branch(es) → transcript → doc(s) → index → PR(s) silently.
-7. A one-line note appears at the end of the response: `📄 Published <slug> → PR opened, will auto-merge after CI.`
-8. **PRs auto-merge** after CI passes. No manual merge step.
-9. If the conversation continues after publishing and produces new material, the agent publishes an **update PR** for the same doc.
+6. As soon as the agent has enough material (Abstract + 2 Findings + 2 Confusion Points), it publishes **inline with its response** — no prompt, no "Go ahead?" question.
+7. The agent creates branch(es) → transcript → doc(s) → index → leaderboard updates → PR(s) silently.
+8. A one-line note appears at the end of the response: `📄 Published <slug> → PR opened, will auto-merge after CI.`
+9. **PRs auto-merge** after CI passes. No manual merge step.
+10. If the conversation continues after publishing and produces new material, the agent publishes an **update PR** for the same doc.
 
 ### Publish Triggers
 
@@ -128,6 +129,48 @@ Docs in `docs/projects/` use a **build journal structure** defined in `docs/_tem
 
 ---
 
+## Personal Stack Leaderboard
+
+The leaderboard is a ranked registry of every tool, skill, model, application, and workflow discussed in conversations. It lives at `docs/_leaderboard/` and is updated automatically by the agent.
+
+### Files
+
+| File | Purpose |
+|------|---------|
+| `docs/_leaderboard/data.yaml` | Source of truth — structured YAML with all entries |
+| `docs/_leaderboard/README.md` | Rendered leaderboard tables (auto-generated from data.yaml) |
+| `docs/_leaderboard/SCHEMA.md` | Schema reference for the YAML format |
+
+### How It Works
+
+1. During conversations, the agent asks about tools/skills/models/applications/workflows that come up substantively.
+2. The agent captures: **type** (tool/skill/model/application/workflow), **subcategory** (coding/design/ui-ux/etc.), **status** (used vs. researched), **rank** within the type+subcategory, and a one-line verdict.
+3. At publish time, leaderboard updates are included in the topic PR (same branch, same commit as the doc page).
+4. If a conversation produces leaderboard updates but not a full doc, the agent creates a standalone PR on branch `leaderboard/update-YYYY-MM-DD`.
+
+### Types
+
+| Type | Definition |
+|------|-----------|
+| `tool` | Software you install, run, or subscribe to |
+| `skill` | A technique or methodology you apply |
+| `model` | An AI model used directly or via API |
+| `application` | A product or platform (not a dev tool) |
+| `workflow` | A multi-step process combining tools/skills |
+
+### Subcategories
+
+`coding` · `design` · `ui-ux` · `video-gen` · `prompt-engineering` · `project-building` · `research` · `productivity` · `devops` · `data` · `audio` · `writing` · `other`
+
+### Ranking Rules
+
+- Rankings are scoped to **type + subcategory** (Rank 1 tool/coding ≠ Rank 1 tool/design)
+- No ties — if two items seem equal, one must be ranked higher
+- An item can appear in multiple subcategories with different ranks
+- Inserting at rank N bumps all entries at rank ≥ N down by 1
+
+---
+
 ## Required Files Per PR
 
 ALL three — PR will be rejected if any are missing.
@@ -181,6 +224,16 @@ docs/_index/README.md
 
 - Rows sorted alphabetically by slug.
 
+### D. Leaderboard Update (if applicable)
+
+```
+docs/_leaderboard/data.yaml
+docs/_leaderboard/README.md
+```
+
+- Include in the same commit as the doc page if the conversation produced any leaderboard entries.
+- Not required if no tools/skills/models were discussed or ranked.
+
 ---
 
 ## Commit & PR Requirements
@@ -188,7 +241,7 @@ docs/_index/README.md
 ### Commits (two small commits per PR)
 
 1. Transcript only → `docs(<category>): add transcript for <slug>`
-2. Doc page + index → `docs(<category>): add doc and index for <slug>`
+2. Doc page + index + leaderboard → `docs(<category>): add doc and index for <slug>`
 
 ### Branch
 
@@ -210,14 +263,18 @@ No direct commits to `main`. Ever.
 ## Confusion Points Captured
 <Bulleted list from the conversation.>
 
+## Leaderboard Updates
+<New or updated entries, or "None".>
+
 ## Checklist
 
 - [x] Branch named `topic/<slug>`
-- [x] Doc page at `docs/<category>/<slug>.md` using `topic.md` template
+- [x] Doc page at `docs/<category>/<slug>.md` using `topic.md` or `project.md` template
 - [x] Transcript at `conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md` with YAML frontmatter
 - [x] Index row added to `docs/_index/README.md`
 - [x] All `{REQUIRED}` placeholders filled
 - [x] No empty sections
+- [x] Leaderboard data updated (if applicable)
 ```
 
 ### Auto-Merge
@@ -301,6 +358,8 @@ No `admin`, no `delete`, no `actions: write`. Token scoped to this single repo.
 | Doc format | Research article (`topic.md`) or build journal (`project.md` for projects) |
 | Transcript path | `conversations/YYYY/YYYY-MM-DD__<slug>/transcript.md` |
 | Index path | `docs/_index/README.md` |
+| Leaderboard data | `docs/_leaderboard/data.yaml` |
+| Leaderboard display | `docs/_leaderboard/README.md` |
 | PR title format | `docs(<category>): <slug>` |
 | Valid categories | `models`, `tools`, `skills`, `repos`, `agents`, `projects` |
 | Template | `docs/_templates/topic.md` or `docs/_templates/project.md` |
