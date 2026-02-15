@@ -16,4 +16,462 @@
 #     date_added: YYYY-MM-DD
 #     date_updated: YYYY-MM-DD
 
-entries: []
+entries:
+
+  # ── TOOLS / CODING ──────────────────────────────────────────────────
+
+  - name: Claude Code
+    type: tool
+    subcategory: coding
+    status: used
+    rank: 1
+    use_case: Terminal-native AI coding agent with subagents, skills, and MCP
+    where_used: Knowledge Dashboard, AI Documentation Library, all projects
+    verdict: Primary coding tool — unmatched for agentic workflows
+    doc_link: docs/tools/claude-code-project-setup.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Cursor
+    type: tool
+    subcategory: coding
+    status: researched
+    rank: 2
+    use_case: AI-assisted code editing with rules system and Figma MCP
+    where_used: ""
+    verdict: Essential infrastructure for frontend AI dev — tier 1 alongside v0
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / PROJECT-BUILDING ────────────────────────────────────────
+
+  - name: GSD (Get Shit Done)
+    type: tool
+    subcategory: project-building
+    status: used
+    rank: 1
+    use_case: Meta-prompting system for phased project execution in Claude Code
+    where_used: Knowledge Dashboard build
+    verdict: Best I've seen — incredible for structured multi-phase builds
+    doc_link: docs/tools/get-shit-done-gsd.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: cc-sdd
+    type: tool
+    subcategory: project-building
+    status: researched
+    rank: 2
+    use_case: Multi-agent spec-driven development with 8 agent support
+    where_used: ""
+    verdict: Broader agent support than GSD but heavier setup
+    doc_link: docs/tools/get-shit-done-gsd.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: spec-kit
+    type: tool
+    subcategory: project-building
+    status: researched
+    rank: 3
+    use_case: Formal constitution-to-tasks specification pipeline
+    where_used: ""
+    verdict: Rigorous documentation alongside code — more formal than GSD
+    doc_link: docs/tools/get-shit-done-gsd.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / UI-UX ──────────────────────────────────────────────────
+
+  - name: v0
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 1
+    use_case: Prompt-to-UI generation for React/Next.js with shadcn/ui
+    where_used: ""
+    verdict: Most mature prompt-to-UI tool for React ecosystem
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Kombai
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 2
+    use_case: Repo-aware Figma-to-code with existing component library indexing
+    where_used: ""
+    verdict: Standout for teams with existing design systems — genuinely repo-aware
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Google Stitch
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 3
+    use_case: Free prompt-to-UI with Figma export, powered by Gemini
+    where_used: ""
+    verdict: Strong for design ideation — still a Labs experiment
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Locofy
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 4
+    use_case: Native Figma plugin for multi-framework code generation
+    where_used: ""
+    verdict: Best native Figma integration — requires well-structured files
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Bolt.new
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 5
+    use_case: Browser-based vibe-coding for fast prototypes
+    where_used: ""
+    verdict: Fast for experiments — limited depth for production
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Lovable
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 6
+    use_case: Prompt-to-app with built-in Supabase integration
+    where_used: ""
+    verdict: Great for demos — components break when you try to extend them
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: screenshot-to-code
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 7
+    use_case: Open-source screenshot/Figma to HTML/React/Vue conversion
+    where_used: ""
+    verdict: Not pixel-perfect but strong starting point — self-hostable
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: WebCrumbs
+    type: tool
+    subcategory: ui-ux
+    status: researched
+    rank: 8
+    use_case: Framework-agnostic open-source component generation
+    where_used: ""
+    verdict: Best option for non-React/Next.js stacks
+    doc_link: docs/tools/ai-frontend-design-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / VIDEO-GEN ──────────────────────────────────────────────
+
+  - name: SeedDance 2.0
+    type: tool
+    subcategory: video-gen
+    status: researched
+    rank: 1
+    use_case: AI-generated cinematic UI demos from screenshots in minutes
+    where_used: ""
+    verdict: Cinematic product demos from a single screenshot — game-changing speed
+    doc_link: docs/tools/ui-motion-video-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Jitter
+    type: tool
+    subcategory: video-gen
+    status: researched
+    rank: 2
+    use_case: Figma-to-video with per-element animation control
+    where_used: ""
+    verdict: Best layer-level UI animation from Figma — intuitive and precise
+    doc_link: docs/tools/ui-motion-video-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: After Effects
+    type: tool
+    subcategory: video-gen
+    status: researched
+    rank: 3
+    use_case: High-production showcase videos with 3D mockups and compositing
+    where_used: ""
+    verdict: Still required for the most demanding work — steep learning curve
+    doc_link: docs/tools/ui-motion-video-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / DESIGN (interactive/production animation) ──────────────
+
+  - name: Rive
+    type: tool
+    subcategory: design
+    status: researched
+    rank: 1
+    use_case: Interactive production animations with state machine architecture
+    where_used: ""
+    verdict: Only tool with true runtime interactivity — state machines are the differentiator
+    doc_link: docs/tools/ui-motion-video-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: LottieFiles
+    type: tool
+    subcategory: design
+    status: researched
+    rank: 2
+    use_case: Lightweight linear animations with AI Motion Copilot
+    where_used: ""
+    verdict: Widest platform support for simple animations — AI copilot is a nice touch
+    doc_link: docs/tools/ui-motion-video-tools.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Antigravity IDE
+    type: tool
+    subcategory: design
+    status: researched
+    rank: 3
+    use_case: Prompt-to-scroll-animated frontend generation
+    where_used: ""
+    verdict: Interesting for scroll animation prototyping — niche but unique
+    doc_link: docs/tools/antigravity-scroll-animation.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / PRODUCTIVITY (GUI wrappers & session management) ───────
+
+  - name: Claude Squad
+    type: tool
+    subcategory: productivity
+    status: researched
+    rank: 1
+    use_case: TUI for managing multiple Claude Code agents with git worktree isolation
+    where_used: ""
+    verdict: Most popular and battle-tested multi-agent manager — tmux + worktrees
+    doc_link: docs/tools/claude-code-gui-wrappers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Claudia / Opcode
+    type: tool
+    subcategory: productivity
+    status: researched
+    rank: 2
+    use_case: Full desktop GUI replacement for Claude Code with session time-travel
+    where_used: ""
+    verdict: Most ambitious wrapper — session checkpoints are killer but maturity is early
+    doc_link: docs/tools/claude-code-gui-wrappers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: NTM
+    type: tool
+    subcategory: productivity
+    status: researched
+    rank: 3
+    use_case: Terminal orchestrator for mixed AI agent types (Claude + Codex + Gemini)
+    where_used: ""
+    verdict: Most feature-rich — mixed agent support is unique
+    doc_link: docs/tools/claude-code-gui-wrappers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Nimbalyst
+    type: tool
+    subcategory: productivity
+    status: researched
+    rank: 4
+    use_case: Visual WYSIWYG editor companion to Claude Code with diff approval
+    where_used: ""
+    verdict: Best for non-developers who need visual editing alongside agents
+    doc_link: docs/tools/claude-code-gui-wrappers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Caudex
+    type: tool
+    subcategory: productivity
+    status: researched
+    rank: 5
+    use_case: Enhanced terminal with multi-tab splits and cost monitoring
+    where_used: ""
+    verdict: Lightweight and keyboard-first — very early but promising
+    doc_link: docs/tools/claude-code-gui-wrappers.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: CLEO
+    type: tool
+    subcategory: productivity
+    status: researched
+    rank: 6
+    use_case: Persistent AI agent memory across sessions with statusline integration
+    where_used: ""
+    verdict: Solves session memory loss — pairs well with Claude Code statusline
+    doc_link: docs/tools/cleo-memory-and-statusline.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── TOOLS / DEVOPS ─────────────────────────────────────────────────
+
+  - name: Vercel
+    type: tool
+    subcategory: devops
+    status: used
+    rank: 1
+    use_case: Frontend deployment with GitHub auto-deploy and environment variables
+    where_used: Knowledge Dashboard
+    verdict: Frictionless deploy — push to main and it's live
+    doc_link: docs/projects/knowledge-dashboard.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── MODELS / CODING ────────────────────────────────────────────────
+
+  - name: Claude Opus 4.6
+    type: model
+    subcategory: coding
+    status: used
+    rank: 1
+    use_case: Most advanced model for complex reasoning, research, and documentation
+    where_used: AI Documentation Library conversations, Knowledge Dashboard planning
+    verdict: Go-to model for everything requiring depth
+    doc_link: ""
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Claude Sonnet 4.5
+    type: model
+    subcategory: coding
+    status: researched
+    rank: 2
+    use_case: Fast model used as GSD subagent backend
+    where_used: ""
+    verdict: Good balance of speed and quality — GSD runs subagents on this
+    doc_link: ""
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── SKILLS / PROMPT-ENGINEERING ────────────────────────────────────
+
+  - name: Context engineering
+    type: skill
+    subcategory: prompt-engineering
+    status: used
+    rank: 1
+    use_case: Managing AI context windows to prevent quality degradation
+    where_used: GSD workflow, multi-agent design process
+    verdict: The meta-skill — everything else depends on keeping context clean
+    doc_link: docs/tools/get-shit-done-gsd.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Learning from system prompts
+    type: skill
+    subcategory: prompt-engineering
+    status: used
+    rank: 2
+    use_case: Studying production AI system prompts to extract prompt patterns
+    where_used: Research for documentation library
+    verdict: Eight core patterns found — role framing, format locking, guardrails, etc.
+    doc_link: docs/skills/learning-from-system-prompts.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── SKILLS / CODING ────────────────────────────────────────────────
+
+  - name: Managing Claude skills
+    type: skill
+    subcategory: coding
+    status: used
+    rank: 1
+    use_case: When to create vs. reuse skills, scoping per-project, avoiding bloat
+    where_used: Knowledge Dashboard design skill synthesis
+    verdict: Less is more — targeted skills beat large libraries
+    doc_link: docs/skills/managing-claude-skills.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: Terminal-first AI workflows
+    type: skill
+    subcategory: coding
+    status: used
+    rank: 2
+    use_case: Understanding why AI tools use CLI and mapping to desktop mental models
+    where_used: Daily workflow
+    verdict: Terminal unlocks parallel sessions, scripting, and composability
+    doc_link: docs/skills/terminal-vs-desktop-for-ai.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── SKILLS / DESIGN ────────────────────────────────────────────────
+
+  - name: Frontend design workflows
+    type: skill
+    subcategory: design
+    status: used
+    rank: 1
+    use_case: Five workflows for getting polished frontend from AI tools
+    where_used: Knowledge Dashboard design phase
+    verdict: Prompt-only is fastest but Figma-to-code gives best fidelity
+    doc_link: docs/skills/ai-frontend-design-workflows.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── WORKFLOWS / PROJECT-BUILDING ───────────────────────────────────
+
+  - name: GSD + multi-agent design
+    type: workflow
+    subcategory: project-building
+    status: used
+    rank: 1
+    use_case: GSD for phased execution + 5-agent design exploration before UI build phase
+    where_used: Knowledge Dashboard
+    verdict: Best of both worlds — structured execution with creative exploration
+    doc_link: docs/projects/knowledge-dashboard.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  - name: GSD + Ralph Loop
+    type: workflow
+    subcategory: project-building
+    status: researched
+    rank: 2
+    use_case: GSD for planning + Ralph Loop for autonomous execution with backpressure
+    where_used: ""
+    verdict: Theoretical power combo — GSD plans, Ralph executes autonomously
+    doc_link: docs/skills/gsd-and-ralph-loop.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
+
+  # ── WORKFLOWS / DESIGN ─────────────────────────────────────────────
+
+  - name: Multi-agent design generation
+    type: workflow
+    subcategory: design
+    status: used
+    rank: 1
+    use_case: Deploy 5 Claude Code agents in parallel for distinct design variants
+    where_used: Knowledge Dashboard
+    verdict: Five unique designs in one shot — coordination protocol prevents duplicates
+    doc_link: docs/agents/multi-agent-design-generation.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
