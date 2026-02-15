@@ -6,7 +6,7 @@ participants:
   - user
   - claude
 source: claude.ai
-summary: "Understanding what GSD is, installing it on Windows, evaluating alternatives, discovering Claude Code tools, full command reference, and workflow clarification."
+summary: "Understanding what GSD is, installing it on Windows, evaluating alternatives, discovering Claude Code tools, full command reference, workflow clarification, and applying GSD to bugfixes and existing codebases."
 ---
 
 # Transcript: Get Shit Done (GSD) — Install, Evaluate, and Discover
@@ -156,3 +156,28 @@ After that, you drive each phase manually through the loop:
 The `discuss` step is optional but recommended. Once all phases are done, run `/gsd:complete-milestone` to archive and tag.
 
 **Summary:** new-project sets up the "what"; you step through the "how" phase by phase.
+
+## Bugfixing and Existing Codebases
+
+**User:** How does get shit done apply for bugfixing / changes to an existing database etc?
+
+**Claude:** GSD has a few paths depending on the size of the change:
+
+**Bug fixes and small changes → `/gsd:quick`**
+Lightweight path. Describe what's wrong, GSD gives same guarantees (atomic commits, state tracking) without full planning. No research, no plan checker, no verifier — just planner + executor. Lives in `.planning/quick/`.
+
+**Systematic debugging → `/gsd:debug [desc]`**
+Specifically for diagnosing broken things. Tracks what's been tried across the session with persistent state.
+
+**Larger changes to existing code → `/gsd:map-codebase` first**
+For substantial work (database migration, schema restructure, major feature on existing code):
+1. `/gsd:map-codebase` — analyzes stack, architecture, conventions
+2. `/gsd:new-project` — questions focus on what you're adding, not starting fresh
+3. Then normal phase loop
+
+**The honest gap:** GSD is optimized for building new things. For ongoing maintenance, incremental schema changes, or routine database work, `/gsd:quick` and `/gsd:debug` are lighter tools. For routine "change column X, add index Y" work, straight Claude Code might be all you need.
+
+**Rule of thumb:**
+- Bug fix or small DB change → `/gsd:quick` or `/gsd:debug`
+- Major refactor or new feature on existing code → `map-codebase` then full workflow
+- Routine maintenance → just use Claude Code directly
