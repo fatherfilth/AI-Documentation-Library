@@ -1,0 +1,19 @@
+# Personal Stack Leaderboard — Source of Truth
+# Updated automatically by the documentation agent during conversations.
+# Each entry is ranked within its type + subcategory combination.
+# Rank 1 = top pick for that use case.
+#
+# Schema:
+#   - name: Display name
+#     type: tool | skill | model | application | workflow
+#     subcategory: coding | design | ui-ux | video-gen | prompt-engineering | project-building | research | productivity | devops | data | audio | writing | other
+#     status: used | researched
+#     rank: integer (within type + subcategory; 1 = top)
+#     use_case: What I use it for / what it's best at
+#     where_used: Project or context where I used it (if status: used)
+#     verdict: One-line personal take
+#     doc_link: Relative path to doc in this repo (if one exists)
+#     date_added: YYYY-MM-DD
+#     date_updated: YYYY-MM-DD
+
+entries: []
