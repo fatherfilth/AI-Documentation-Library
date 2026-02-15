@@ -58,6 +58,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 |------|------|--------|----------|---------|
 | 1 | Claude Code | 🟢 Used | Terminal-native AI coding agent with subagents, skills, and MCP | Primary coding tool — unmatched for agentic workflows |
 | 2 | Cursor | 🔵 Researched | AI-assisted code editing with rules system and Figma MCP | Essential infrastructure for frontend AI dev — tier 1 alongside v0 |
+| 3 | Playwright MCP | 🔵 Researched | Browser automation for AI agents — testing, form filling, UI verification | Official Microsoft backing, CLI+SKILLS mode is the future — heavy on tokens though |
 
 #### Project-Building
 
@@ -95,6 +96,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 | 1 | Rive | 🔵 Researched | Interactive production animations with state machine architecture | Only tool with true runtime interactivity — state machines are the differentiator |
 | 2 | LottieFiles | 🔵 Researched | Lightweight linear animations with AI Motion Copilot | Widest platform support for simple animations — AI copilot is a nice touch |
 | 3 | Antigravity IDE | 🔵 Researched | Prompt-to-scroll-animated frontend generation | Interesting for scroll animation prototyping — niche but unique |
+| 4 | Glif MCP | 🔵 Researched | Visual AI workflow execution — image gen, memes, ComfyUI pipelines via MCP | Only MCP for generative media — creative but pre-1.0 and small community |
 
 #### Productivity
 
@@ -106,6 +108,18 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 | 4 | Nimbalyst | 🔵 Researched | Visual WYSIWYG editor companion to Claude Code with diff approval | Best for non-developers who need visual editing alongside agents |
 | 5 | Caudex | 🔵 Researched | Enhanced terminal with multi-tab splits and cost monitoring | Lightweight and keyboard-first — very early but promising |
 | 6 | CLEO | 🔵 Researched | Persistent AI agent memory across sessions with statusline integration | Solves session memory loss — pairs well with Claude Code statusline |
+
+#### Research
+
+| Rank | Name | Status | Use Case | Verdict |
+|------|------|--------|----------|---------|
+| 1 | Perplexity MCP | 🔵 Researched | Real-time web search, deep research, and reasoning via Sonar models in any MCP client | Strongest MCP for live research — but overlaps with built-in search in Claude/ChatGPT |
+
+#### Data
+
+| Rank | Name | Status | Use Case | Verdict |
+|------|------|--------|----------|---------|
+| 1 | Firecrawl MCP | 🔵 Researched | Web scraping, structured extraction, and site crawling for RAG and data pipelines | Most broadly useful MCP for dev workflows — map→scrape is the key pattern |
 
 #### DevOps
 
