@@ -230,13 +230,25 @@ entries:
     date_added: 2026-02-15
     date_updated: 2026-02-15
 
-  # ── TOOLS / DESIGN (interactive/production animation) ──────────────
+  # ── TOOLS / DESIGN ──────────────────────────────────────────────────
+
+  - name: Higgsfield
+    type: tool
+    subcategory: design
+    status: researched
+    rank: 1
+    use_case: Multi-model image generation platform for logo concepts and brand visuals
+    where_used: ""
+    verdict: Assumed #1 for design image gen — multi-model aggregator, untested but promising
+    doc_link: docs/tools/ai-logo-brand-generation.md
+    date_added: 2026-02-15
+    date_updated: 2026-02-15
 
   - name: Rive
     type: tool
     subcategory: design
     status: researched
-    rank: 1
+    rank: 2
     use_case: Interactive production animations with state machine architecture
     where_used: ""
     verdict: Only tool with true runtime interactivity — state machines are the differentiator
@@ -248,7 +260,7 @@ entries:
     type: tool
     subcategory: design
     status: researched
-    rank: 2
+    rank: 3
     use_case: Lightweight linear animations with AI Motion Copilot
     where_used: ""
     verdict: Widest platform support for simple animations — AI copilot is a nice touch
@@ -260,7 +272,7 @@ entries:
     type: tool
     subcategory: design
     status: researched
-    rank: 3
+    rank: 4
     use_case: Prompt-to-scroll-animated frontend generation
     where_used: ""
     verdict: Interesting for scroll animation prototyping — niche but unique
@@ -272,7 +284,7 @@ entries:
     type: tool
     subcategory: design
     status: researched
-    rank: 4
+    rank: 5
     use_case: Visual AI workflow execution — image gen, memes, ComfyUI pipelines via MCP
     where_used: ""
     verdict: Only MCP for generative media — creative but pre-1.0 and small community

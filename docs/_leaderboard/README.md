@@ -55,7 +55,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Coding
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Claude Code | 🟢 Used | Terminal-native AI coding agent with subagents, skills, and MCP | Primary coding tool — unmatched for agentic workflows |
 | 2 | Cursor | 🔵 Researched | AI-assisted code editing with rules system and Figma MCP | Essential infrastructure for frontend AI dev — tier 1 alongside v0 |
 | 3 | Playwright MCP | 🔵 Researched | Browser automation for AI agents — testing, form filling, UI verification | Official Microsoft backing, CLI+SKILLS mode is the future — heavy on tokens though |
@@ -63,7 +63,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Project-Building
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | GSD (Get Shit Done) | 🟢 Used | Meta-prompting system for phased project execution in Claude Code | Best I've seen — incredible for structured multi-phase builds |
 | 2 | cc-sdd | 🔵 Researched | Multi-agent spec-driven development with 8 agent support | Broader agent support than GSD but heavier setup |
 | 3 | spec-kit | 🔵 Researched | Formal constitution-to-tasks specification pipeline | Rigorous documentation alongside code — more formal than GSD |
@@ -71,7 +71,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### UI/UX
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | v0 | 🔵 Researched | Prompt-to-UI generation for React/Next.js with shadcn/ui | Most mature prompt-to-UI tool for React ecosystem |
 | 2 | Kombai | 🔵 Researched | Repo-aware Figma-to-code with existing component library indexing | Standout for teams with existing design systems — genuinely repo-aware |
 | 3 | Google Stitch | 🔵 Researched | Free prompt-to-UI with Figma export, powered by Gemini | Strong for design ideation — still a Labs experiment |
@@ -84,7 +84,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Video-Gen
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | SeedDance 2.0 | 🔵 Researched | AI-generated cinematic UI demos from screenshots in minutes | Cinematic product demos from a single screenshot — game-changing speed |
 | 2 | Jitter | 🔵 Researched | Figma-to-video with per-element animation control | Best layer-level UI animation from Figma — intuitive and precise |
 | 3 | After Effects | 🔵 Researched | High-production showcase videos with 3D mockups and compositing | Still required for the most demanding work — steep learning curve |
@@ -92,16 +92,17 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Design
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
-| 1 | Rive | 🔵 Researched | Interactive production animations with state machine architecture | Only tool with true runtime interactivity — state machines are the differentiator |
-| 2 | LottieFiles | 🔵 Researched | Lightweight linear animations with AI Motion Copilot | Widest platform support for simple animations — AI copilot is a nice touch |
-| 3 | Antigravity IDE | 🔵 Researched | Prompt-to-scroll-animated frontend generation | Interesting for scroll animation prototyping — niche but unique |
-| 4 | Glif MCP | 🔵 Researched | Visual AI workflow execution — image gen, memes, ComfyUI pipelines via MCP | Only MCP for generative media — creative but pre-1.0 and small community |
+|------|------|--------|----------|--------|
+| 1 | Higgsfield | 🔵 Researched | Multi-model image generation platform for logo concepts and brand visuals | Assumed #1 for design image gen — multi-model aggregator, untested but promising |
+| 2 | Rive | 🔵 Researched | Interactive production animations with state machine architecture | Only tool with true runtime interactivity — state machines are the differentiator |
+| 3 | LottieFiles | 🔵 Researched | Lightweight linear animations with AI Motion Copilot | Widest platform support for simple animations — AI copilot is a nice touch |
+| 4 | Antigravity IDE | 🔵 Researched | Prompt-to-scroll-animated frontend generation | Interesting for scroll animation prototyping — niche but unique |
+| 5 | Glif MCP | 🔵 Researched | Visual AI workflow execution — image gen, memes, ComfyUI pipelines via MCP | Only MCP for generative media — creative but pre-1.0 and small community |
 
 #### Productivity
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Claude Squad | 🔵 Researched | TUI for managing multiple Claude Code agents with git worktree isolation | Most popular and battle-tested multi-agent manager — tmux + worktrees |
 | 2 | Claudia / Opcode | 🔵 Researched | Full desktop GUI replacement for Claude Code with session time-travel | Most ambitious wrapper — session checkpoints are killer but maturity is early |
 | 3 | NTM | 🔵 Researched | Terminal orchestrator for mixed AI agent types (Claude + Codex + Gemini) | Most feature-rich — mixed agent support is unique |
@@ -112,19 +113,19 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Research
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Perplexity MCP | 🔵 Researched | Real-time web search, deep research, and reasoning via Sonar models in any MCP client | Strongest MCP for live research — but overlaps with built-in search in Claude/ChatGPT |
 
 #### Data
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Firecrawl MCP | 🔵 Researched | Web scraping, structured extraction, and site crawling for RAG and data pipelines | Most broadly useful MCP for dev workflows — map→scrape is the key pattern |
 
 #### DevOps
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Vercel | 🟢 Used | Frontend deployment with GitHub auto-deploy and environment variables | Frictionless deploy — push to main and it's live |
 
 ---
@@ -134,7 +135,7 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Coding
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Claude Opus 4.6 | 🟢 Used | Most advanced model for complex reasoning, research, and documentation | Go-to model for everything requiring depth |
 | 2 | Claude Sonnet 4.5 | 🔵 Researched | Fast model used as GSD subagent backend | Good balance of speed and quality — GSD runs subagents on this |
 
@@ -145,21 +146,21 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Prompt-Engineering
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Context engineering | 🟢 Used | Managing AI context windows to prevent quality degradation | The meta-skill — everything else depends on keeping context clean |
 | 2 | Learning from system prompts | 🟢 Used | Studying production AI system prompts to extract prompt patterns | Eight core patterns found — role framing, format locking, guardrails, etc. |
 
 #### Coding
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Managing Claude skills | 🟢 Used | When to create vs. reuse skills, scoping per-project, avoiding bloat | Less is more — targeted skills beat large libraries |
 | 2 | Terminal-first AI workflows | 🟢 Used | Understanding why AI tools use CLI and mapping to desktop mental models | Terminal unlocks parallel sessions, scripting, and composability |
 
 #### Design
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Frontend design workflows | 🟢 Used | Five workflows for getting polished frontend from AI tools | Prompt-only is fastest but Figma-to-code gives best fidelity |
 
 ---
@@ -169,14 +170,14 @@ This leaderboard tracks what I've actually used vs. what I've only researched, r
 #### Project-Building
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | GSD + multi-agent design | 🟢 Used | GSD for phased execution + 5-agent design exploration before UI build phase | Best of both worlds — structured execution with creative exploration |
 | 2 | GSD + Ralph Loop | 🔵 Researched | GSD for planning + Ralph Loop for autonomous execution with backpressure | Theoretical power combo — GSD plans, Ralph executes autonomously |
 
 #### Design
 
 | Rank | Name | Status | Use Case | Verdict |
-|------|------|--------|----------|---------|
+|------|------|--------|----------|--------|
 | 1 | Multi-agent design generation | 🟢 Used | Deploy 5 Claude Code agents in parallel for distinct design variants | Five unique designs in one shot — coordination protocol prevents duplicates |
 
 <!-- LEADERBOARD_END -->
