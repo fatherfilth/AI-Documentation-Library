@@ -78,3 +78,36 @@ Terminal bell often doesn't work in WSL. Recommendation: skip bell entirely and 
 
 ### Graduation Path
 Terminal bell = zero config option. Hooks = full control option (custom sounds, project-specific messages, clickable banners).
+
+---
+
+## Bug Report — `claude config set --global` Broken on Newer Versions
+
+**User:** (Screenshot) Running `claude config set --global preferredNotifChannel terminal_bell` in PowerShell on Windows returns `error: unknown option '--global'`.
+
+**Claude:** This is a known bug (GitHub issue #8441). The `claude config set --global` command is broken in Claude Code v2.0+ — the `claude config` command was deprecated. The fix is to edit the settings file directly:
+
+### Workaround: Edit settings.json manually
+
+Open or create `C:\Users\<username>\.claude\settings.json` and add:
+
+```json
+{
+  "preferredNotifChannel": "terminal_bell"
+}
+```
+
+From PowerShell:
+```powershell
+notepad "$env:USERPROFILE\.claude\settings.json"
+```
+
+Takes effect immediately, no restart needed.
+
+### Alternative: Use `/config` inside Claude Code
+
+The `/config` slash command inside a running Claude Code session opens an interactive settings menu that works correctly — bypassing the broken CLI flag.
+
+### Key Confusion Point
+
+Most tutorials and blog posts (including Anthropic's own community posts) still reference the `--global` flag syntax. This is outdated. The correct approach for Claude Code v2.0+ is direct settings.json editing or the `/config` slash command.
